@@ -113,6 +113,23 @@
   --max-width-2xl: 42rem;
 }
 
+/* Theme-aware brand gradients (follow --primary / --chart-2 when ThemePicker changes). */
+.brand-gradient-text {
+  background-image: linear-gradient(90deg, var(--primary), var(--chart-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-gradient-bg {
+  background-image: linear-gradient(90deg, var(--primary), var(--chart-2));
+  color: var(--primary-foreground);
+}
+
+.brand-gradient-bg:hover {
+  opacity: 0.92;
+}
+
 /* ---- Forge (brand / default) ------------------------------------------- */
 :root,
 .theme-forge {

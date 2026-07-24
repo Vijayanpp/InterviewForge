@@ -1,19 +1,21 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { BrandLogo } from "@/components/brand/brand-logo";
 import { ThemePicker } from "@/components/theme/theme-picker";
+import { BRAND_NAME } from "@/lib/brand";
 
 const NAV_LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "Process" },
-  { href: "/#technologies", label: "Technologies" },
 ];
 
+/** Marketing header: text brand only (no logo mark), no Pricing. Theme-aware. */
 export function SiteHeader() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-container-max items-center justify-between px-lg lg:px-xl">
-        <BrandLogo variant="mark" href="/" />
+        <Link href="/" className="brand-gradient-text font-headline-md text-headline-md font-bold">
+          {BRAND_NAME}
+        </Link>
 
         <nav className="hidden items-center gap-lg md:flex">
           {NAV_LINKS.map((link) => (
@@ -29,8 +31,17 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-sm">
           <ThemePicker variant="topbar" />
-          <Button variant="ghost" nativeButton={false} render={<Link href="/login">Log in</Link>} />
-          <Button nativeButton={false} render={<Link href="/register">Start Free Interview</Link>} />
+          <Button
+            variant="ghost"
+            className="hidden sm:inline-flex"
+            nativeButton={false}
+            render={<Link href="/login">Log in</Link>}
+          />
+          <Button
+            variant="gradient"
+            nativeButton={false}
+            render={<Link href="/register">Start Free Interview</Link>}
+          />
         </div>
       </div>
     </header>
