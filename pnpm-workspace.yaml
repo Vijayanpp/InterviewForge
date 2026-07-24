@@ -1,7 +1,3 @@
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
-
 overrides:
   zod: 4.0.17
 
@@ -10,7 +6,9 @@ overrides:
 # versions (e.g. in CI/Docker), so this is safe to disable per-project.
 minimumReleaseAge: 0
 
+# pnpm 11 blocks dependency postinstall scripts unless explicitly allowed
+# (ERR_PNPM_IGNORED_BUILDS). Approve the packages Next/eslint need.
 allowBuilds:
   esbuild: true
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
+  sharp: true
+  unrs-resolver: true
