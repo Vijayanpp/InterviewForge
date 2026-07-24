@@ -1,3 +1,16 @@
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+overrides:
+  zod: 4.0.17
+
+# The lockfile already pins exact, previously-installed versions; there's no
+# supply-chain benefit to also delaying fresh installs of those same pinned
+# versions (e.g. in CI/Docker), so this is safe to disable per-project.
+minimumReleaseAge: 0
+
+allowBuilds:
+  esbuild: true
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false

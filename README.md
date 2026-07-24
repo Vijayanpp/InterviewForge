@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InterviewForge
 
-## Getting Started
+AI-powered technical interview and coding assessment platform for candidates and hiring teams.
 
-First, run the development server:
+**Docs:** [docs/](./docs/README.md) — [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)
+
+## What’s included
+
+- Next.js App Router + TypeScript (strict) + Tailwind CSS + shadcn/ui
+- Supabase Auth, Postgres (RLS), Storage (resumes, avatars)
+- Candidate onboarding, dashboard, settings, interview wizard
+- **Text** and **voice** AI interviews (adaptive questions, evaluation, report)
+- Practice coding room + coding / mixed interview rounds (Monaco)
+- Swappable providers: AI (`mock` / `openai`), voice STT/TTS, code execution (`mock` / Judge0)
+- Admin: technologies, topics, question bank, coding challenges + test cases
+- Vitest + Playwright
+
+Default interviewer persona: **Maya** (Technical Architect). First turn uses a deterministic welcome greeting.
+
+---
+
+## Prerequisites
+
+- Node.js 22+
+- [pnpm](https://pnpm.io/) 10+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Supabase CLI)
+- Supabase CLI via the local `supabase` package (`npx supabase`)
+
+---
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cd interviewforge
+pnpm install
+
+pnpm db:start
+cp .env.example .env.local
+pnpm db:status
+# Paste NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+# and SUPABASE_SERVICE_ROLE_KEY into .env.local
+
+pnpm db:reset
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3100](http://localhost:3100).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+# Real AI
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Real voice (same key)
+VOICE_PROVIDER=openai
+VOICE_TTS_VOICE=nova
 
-## Learn More
+# Real code runs
+CODE_EXECUTION_PROVIDER=judge0
+JUDGE0_URL=https://ce.judge0.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+More detail: [docs/setup.md](./docs/setup.md).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Script | Purpose |
+| --- | --- |
+| `pnpm dev` | Next.js on port **3100** |
+| `pnpm build` / `pnpm start` | Production build / serve |
+| `pnpm lint` | ESLint |
+| `pnpm db:start` / `db:stop` / `db:status` | Local Supabase |
+| `pnpm db:reset` | Migrations + seed |
+| `pnpm db:migrate` / `db:seed` / `db:types` | Migrate / seed / regenerate types |
+| `pnpm judge0:up` / `judge0:down` / `judge0:logs` | Local Judge0 CE |
+| `pnpm test:unit` / `test:integration` / `test:e2e` | Test suites |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Architecture (short)
+
+```
+app/                  Marketing, auth, candidate, admin, live interviews, API
+components/           Wizard, rooms, voice, coding, admin, settings
+lib/ai|voice|…        Swappable providers + interview-engine services
+lib/repositories/     Supabase queries only
+supabase/             Migrations + seed
+docs/                 Full documentation
+```
+
+**Rules:** no AI / service-role from the client; repositories vs services split; Zod-validate all AI structured outputs.
+
+See [docs/architecture.md](./docs/architecture.md).
+
+---
+
+## Roles & routes
+
+| Role | Routes |
+| --- | --- |
+| Public | `/`, `/login`, `/register`, password reset |
+| Candidate | `/onboarding`, `/dashboard`, `/settings`, `/interviews/*`, `/practice/*` |
+| Admin | `/admin/dashboard`, technologies, topics, questions, challenges |
+
+Promote to admin via `profiles.role_id` → `roles` row `admin`.
+
+---
+
+## License
+
+Private — all rights reserved.

@@ -1,0 +1,45 @@
+# Runs the InterviewForge production build in a container.
+#
+# This intentionally does NOT bundle Postgres/Auth/Storage — those are
+# provided by Supabase (either a hosted project, or your own self-hosted
+# Supabase stack, e.g. via `supabase start` for local dev). Point the env
+# vars below at whichever Supabase project you want this container to use.
+#
+# Usage (from the repo root):
+#   docker compose -f docker/docker-compose.yml --env-file .env.local up --build
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    image: interviewforge:latest
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    environment:
+      NODE_ENV: production
+      PORT: 3100
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      CODE_EXECUTION_PROVIDER: ${CODE_EXECUTION_PROVIDER:-mock}
+      JUDGE0_URL: ${JUDGE0_URL:-}
+      JUDGE0_AUTH_TOKEN: ${JUDGE0_AUTH_TOKEN:-}
+      JUDGE0_AUTH_HEADER: ${JUDGE0_AUTH_HEADER:-X-Auth-Token}
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      APP_URL: ${APP_URL:-http://localhost:3100}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-30}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3100/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
