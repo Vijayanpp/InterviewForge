@@ -2,7 +2,11 @@
 
 AI-powered technical interview and coding assessment platform for candidates and hiring teams.
 
+**Free & open source** under the [MIT License](./LICENSE). Self-host with your own keys — no paid product license required.
+
 **Docs:** [docs/](./docs/README.md) — [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)
+
+**Support development:** [Donate via Razorpay](https://rzp.io/rzp/1JaZann3) — helps cover API/hosting for demos and maintenance. See [Contributing](./CONTRIBUTING.md).
 
 ## What’s included
 
@@ -16,6 +20,8 @@ AI-powered technical interview and coding assessment platform for candidates and
 - Vitest + Playwright
 
 Default interviewer persona: **Maya** (Technical Architect). First turn uses a deterministic welcome greeting.
+
+Real AI / voice interviews need your own `OPENAI_API_KEY`. Mock providers work offline for local demos and CI.
 
 ---
 
@@ -46,17 +52,16 @@ pnpm dev
 
 Open [http://localhost:3100](http://localhost:3100).
 
+Default in `.env.example` is `AI_PROVIDER=mock` (no OpenAI key). For real interviews:
+
 ```env
-# Real AI
 AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4o-mini
 
-# Real voice (same key)
 VOICE_PROVIDER=openai
 VOICE_TTS_VOICE=nova
 
-# Real code runs
 CODE_EXECUTION_PROVIDER=judge0
 JUDGE0_URL=https://ce.judge0.com
 ```
@@ -111,4 +116,8 @@ Promote to admin via `profiles.role_id` → `roles` row `admin`.
 
 ## License
 
-Private — all rights reserved.
+[MIT](./LICENSE) © 2026 Vijayan PP
+
+Free to use, modify, and distribute. Contributions welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+**Support:** [rzp.io/rzp/1JaZann3](https://rzp.io/rzp/1JaZann3)

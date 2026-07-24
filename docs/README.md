@@ -11,3 +11,5 @@ Product and engineering docs for the InterviewForge codebase (`interviewforge/`)
 | [Testing](./testing.md) | Unit, integration, e2e |
 
 Start with the root [README](../README.md) for a quick start, then use these pages for depth.
+
+**License:** [MIT](../LICENSE) · **Support:** [Donate](https://rzp.io/rzp/1JaZann3) · **Contributing:** [CONTRIBUTING.md](../CONTRIBUTING.md)

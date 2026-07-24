@@ -33,6 +33,8 @@ pnpm dev                      # http://localhost:3100
 
 `AI_PROVIDER=openai` and `VOICE_PROVIDER=openai` are **fail-closed**: missing `OPENAI_API_KEY` errors on live use (no silent mock fallback).
 
+Clones should start with the `.env.example` defaults (`AI_PROVIDER=mock`, `VOICE_PROVIDER=mock`) so the app runs without a paid API key.
+
 ## Hosted Supabase
 
 Point `.env.local` at your project:
