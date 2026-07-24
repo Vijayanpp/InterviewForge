@@ -17,4 +17,4 @@ Thanks for helping improve InterviewForge. This project is MIT-licensed and free
 
 ## Support the project
 
-If InterviewForge helps you, you can [support development](https://rzp.io/rzp/1JaZann3) (donations help cover API and hosting costs for demos and maintenance).
+If InterviewForge helps you, you can [support development](https://rzp.io/rzp/FnEvT7Ff) (donations help cover API and hosting costs for demos and maintenance).

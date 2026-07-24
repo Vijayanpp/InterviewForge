@@ -6,7 +6,25 @@ AI-powered technical interview and coding assessment platform for candidates and
 
 **Docs:** [docs/](./docs/README.md) — [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)
 
-**Support development:** [Donate via Razorpay](https://rzp.io/rzp/1JaZann3) — helps cover API/hosting for demos and maintenance. See [Contributing](./CONTRIBUTING.md).
+**Support development:** [Donate via Razorpay](https://rzp.io/rzp/FnEvT7Ff) — helps cover API/hosting for demos and maintenance. See [Contributing](./CONTRIBUTING.md).
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/login.png" alt="InterviewForge login — Practice. Prepare. Perform. Succeed." width="800" />
+</p>
+
+<p align="center">
+  <img src="docs/images/dashboard.png" alt="Candidate dashboard with readiness score and topics to improve" width="800" />
+</p>
+
+<p align="center">
+  <img src="docs/images/voice-interview.png" alt="Voice interview with Maya, Technical Architect AI interviewer" width="800" />
+</p>
+
+<p align="center">
+  <img src="docs/images/coding-challenges.png" alt="Coding challenges room with Monaco editor — Palindrome Number" width="800" />
+</p>
 
 ## What’s included
 
@@ -120,4 +138,4 @@ Promote to admin via `profiles.role_id` → `roles` row `admin`.
 
 Free to use, modify, and distribute. Contributions welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-**Support:** [rzp.io/rzp/1JaZann3](https://rzp.io/rzp/1JaZann3)
+**Support:** [rzp.io/rzp/FnEvT7Ff](https://rzp.io/rzp/FnEvT7Ff)

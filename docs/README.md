@@ -12,4 +12,4 @@ Product and engineering docs for the InterviewForge codebase (`interviewforge/`)
 
 Start with the root [README](../README.md) for a quick start, then use these pages for depth.
 
-**License:** [MIT](../LICENSE) · **Support:** [Donate](https://rzp.io/rzp/1JaZann3) · **Contributing:** [CONTRIBUTING.md](../CONTRIBUTING.md)
+**License:** [MIT](../LICENSE) · **Support:** [Donate](https://rzp.io/rzp/FnEvT7Ff) · **Contributing:** [CONTRIBUTING.md](../CONTRIBUTING.md)
