@@ -1,12 +1,61 @@
 # InterviewForge
 
-AI-powered technical interview and coding assessment platform for candidates and hiring teams.
+The all-in-one AI interview practice platform — adaptive questions, voice & coding rounds, honest rubric scoring, and personalised improvement plans.
 
-**Free & open source** under the [MIT License](./LICENSE). Self-host with your own keys — no paid product license required.
+[![Live preview](https://img.shields.io/badge/Live_preview-hostingersite.com-8B5CF6?style=flat&logoColor=white)](https://plum-squirrel-355450.hostingersite.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres_+_Auth-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat)](./LICENSE)
 
-**Docs:** [docs/](./docs/README.md) — [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)
+**Practice. Prepare. Perform. Succeed.** · Free & open source — self-host with your own keys.
 
-**Support development:** [Donate via Razorpay](https://rzp.io/rzp/FnEvT7Ff) — helps cover API/hosting for demos and maintenance. See [Contributing](./CONTRIBUTING.md).
+**Docs:** [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)  
+**Support:** [Donate via Razorpay](https://rzp.io/rzp/FnEvT7Ff) · [Contributing](./CONTRIBUTING.md)
+
+InterviewForge simulates a live interview with an AI that asks follow-ups, adapts difficulty, tracks topic coverage, and gives feedback that’s actually useful — not empty praise. Practise across **21+ technology tracks**, choose **text** or **voice**, run **coding challenges**, and leave with a full report plus a 7- and 30-day improvement plan.
+
+---
+
+## Why InterviewForge?
+
+Most “AI interview” tools either script a fixed quiz or cheerlead every answer. InterviewForge is built to feel closer to a real technical screen:
+
+- **Adaptive questioning** — difficulty and follow-ups respond to what you actually said; the engine avoids repeating questions and watches remaining time.
+- **Honest scoring** — answers are graded on technical accuracy, depth, clarity, and problem-solving with a clear rubric — never inflated praise.
+- **Multiple modes** — text chat, **voice** (STT/TTS with editable transcript), and **coding** (Monaco + mock or Judge0 execution).
+- **Personalization** — resume-based and job-description-based interviews, plus custom instructions when you need them.
+- **Actionable outcomes** — overall score, hire-style recommendation, topic breakdown, and concrete 7-day / 30-day study plans.
+- **Progress over time** — dashboard readiness, score trends, and “topics to improve” from your sessions.
+
+Default AI interviewer persona: **Maya**, a Technical Architect with ~20 years of experience. The first turn always opens with a warm, deterministic welcome so every live session starts the same way.
+
+---
+
+## Features
+
+### For candidates
+
+| Feature | What you get |
+| --- | --- |
+| Interview wizard | Pick type (technical, behavioural, resume/JD-based, coding, mixed…), stack, difficulty, duration, and **text or voice** delivery |
+| Adaptive AI interviewer | Follow-ups that probe gaps; no mid-interview score leaks |
+| Voice interviews | TTS speaks questions; silence/mic stop → transcript → edit → **Finish Answer** |
+| Coding practice & rounds | Seeded challenges + Monaco editor; Run / Submit with mock fixtures or Judge0 |
+| Dashboard | Readiness score, averages, interview count, score improvement chart, weak topics |
+| Reports | Full post-session report with strengths, gaps, and study plans |
+| Settings | Profile name + avatar for a named greeting |
+
+### For admins
+
+- Manage **technologies** and **topic** trees  
+- Curate an optional **question bank** (including AI draft helper)  
+- CRUD **coding challenges** and nested test cases (hidden tests stay server-side)  
+
+### Technology tracks (examples)
+
+JavaScript, TypeScript, React, Angular, Vue.js, Next.js, Node.js, Python, Java, C#, C++, PHP, SQL, System Design, DevOps & Cloud — and more, extensible by admins.
+
+---
 
 ## Screenshots
 
@@ -26,27 +75,43 @@ AI-powered technical interview and coding assessment platform for candidates and
   <img src="docs/images/coding-challenges.png" alt="Coding challenges room with Monaco editor — Palindrome Number" width="800" />
 </p>
 
-## What’s included
+---
 
-- Next.js App Router + TypeScript (strict) + Tailwind CSS + shadcn/ui
-- Supabase Auth, Postgres (RLS), Storage (resumes, avatars)
-- Candidate onboarding, dashboard, settings, interview wizard
-- **Text** and **voice** AI interviews (adaptive questions, evaluation, report)
-- Practice coding room + coding / mixed interview rounds (Monaco)
-- Swappable providers: AI (`mock` / `openai`), voice STT/TTS, code execution (`mock` / Judge0)
-- Admin: technologies, topics, question bank, coding challenges + test cases
-- Vitest + Playwright
+## How a session works
 
-Default interviewer persona: **Maya** (Technical Architect). First turn uses a deterministic welcome greeting.
+```text
+Start wizard → AI opens with Maya’s welcome
+     → Answer (text or voice)
+     → Rubric evaluation + optional follow-up
+     → Next topic / question (adaptive)
+     → End → Report + study plan
+```
 
-Real AI / voice interviews need your own `OPENAI_API_KEY`. Mock providers work offline for local demos and CI.
+Coding-only interviews go straight to the coding room. **Mixed** runs a short text round, then hands off to coding.
+
+---
+
+## Tech stack
+
+| Layer | Choice |
+| --- | --- |
+| App | Next.js App Router, TypeScript (strict), Tailwind, shadcn/ui |
+| Auth & data | Supabase Auth, Postgres (RLS), Storage (resumes, avatars) |
+| AI | Swappable `mock` / `openai` — versioned prompts in DB, Zod-validated outputs |
+| Voice | Swappable `mock` / `openai` (Whisper STT + TTS) |
+| Code runs | Swappable `mock` / Judge0 |
+| Tests | Vitest (unit + RLS) · Playwright (e2e) |
+
+**Design rules:** never call the AI provider or service-role key from the client; repositories own queries; services own business logic; every AI structured response is Zod-validated.
+
+Real AI / voice need your own `OPENAI_API_KEY`. Mock providers work offline for local demos and CI.
 
 ---
 
 ## Prerequisites
 
-- Node.js 22+
-- [pnpm](https://pnpm.io/) 10+
+- Node.js **22+**
+- [pnpm](https://pnpm.io/) **10+**
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Supabase CLI)
 - Supabase CLI via the local `supabase` package (`npx supabase`)
 
@@ -84,7 +149,7 @@ CODE_EXECUTION_PROVIDER=judge0
 JUDGE0_URL=https://ce.judge0.com
 ```
 
-More detail: [docs/setup.md](./docs/setup.md).
+Full env list and hosted Supabase notes: [docs/setup.md](./docs/setup.md).
 
 ---
 
@@ -114,8 +179,6 @@ supabase/             Migrations + seed
 docs/                 Full documentation
 ```
 
-**Rules:** no AI / service-role from the client; repositories vs services split; Zod-validate all AI structured outputs.
-
 See [docs/architecture.md](./docs/architecture.md).
 
 ---
@@ -132,10 +195,18 @@ Promote to admin via `profiles.role_id` → `roles` row `admin`.
 
 ---
 
-## License
+## Project status
+
+InterviewForge is **usable end-to-end** for candidate practice (text, voice, coding) with mock or OpenAI backends. Recruiter org UI and paid billing metering are schema-ready but deferred. Self-host for free; use the [demo](https://plum-squirrel-355450.hostingersite.com/) to try without setup.
+
+Contributions and feedback are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+---
+
+## License & support
 
 [MIT](./LICENSE) © 2026 Vijayan PP
 
-Free to use, modify, and distribute. Contributions welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Free to use, modify, and distribute.
 
-**Support:** [rzp.io/rzp/FnEvT7Ff](https://rzp.io/rzp/FnEvT7Ff)
+If InterviewForge helps you prepare (or ship your own fork), you can [support development](https://rzp.io/rzp/FnEvT7Ff) — donations help cover API and hosting costs for the public demo and maintenance.
