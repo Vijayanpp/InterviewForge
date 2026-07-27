@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/practice", label: "Coding Challenges", icon: Code2 },
   { href: "/interviews/history", label: "Interview History", icon: History },
   { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/become-recruiter", label: "Recruiter", icon: ShieldCheck },
 ];
 
 export function CandidateSidebar({ isAdmin = false }: { isAdmin?: boolean }) {

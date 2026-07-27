@@ -44,6 +44,13 @@ const serverEnvSchema = z.object({
 
   APP_URL: z.string().url().default("http://localhost:3000"),
 
+  /** Optional — invite emails no-op / log-only when unset (local/dev). */
+  RESEND_API_KEY: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.string().optional()
+  ),
+  EMAIL_FROM: z.string().default("InterviewForge <onboarding@resend.dev>"),
+
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().positive().default(30),
 

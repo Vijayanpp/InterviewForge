@@ -6,6 +6,7 @@ import { getSessionById } from "@/lib/repositories/interview-sessions.repo";
 import { getTechnologiesByIds, getTopicsByIds } from "@/lib/repositories/technologies.repo";
 import { getServerEnv } from "@/lib/env";
 import { VoiceRoom } from "@/components/voice/voice-room";
+import { maybeProctorWrap } from "@/components/proctoring/maybe-proctor-wrap";
 
 export const metadata: Metadata = {
   title: "Voice Interview",
@@ -41,7 +42,7 @@ export default async function InterviewVoicePage({
     getTopicsByIds(supabase, session.topic_ids),
   ]);
 
-  return (
+  const room = (
     <VoiceRoom
       sessionId={sessionId}
       interviewType={session.interview_type}
@@ -53,4 +54,6 @@ export default async function InterviewVoicePage({
       silenceMs={env.VOICE_SILENCE_MS}
     />
   );
+
+  return maybeProctorWrap(sessionId, room);
 }
