@@ -6,3 +6,4 @@ export * from "@/types/domain/interview";
 export * from "@/types/domain/report";
 export * from "@/types/domain/question-bank";
 export * from "@/types/domain/coding";
+export * from "@/types/domain/assessment";

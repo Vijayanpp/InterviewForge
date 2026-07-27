@@ -164,8 +164,14 @@ export type Database = {
           candidate_id: string | null
           completed_at: string | null
           created_at: string
+          expires_at: string | null
           id: string
+          integrity_flagged: boolean
+          integrity_score: number | null
+          integrity_summary: Json
+          invite_token: string
           invited_at: string
+          opened_at: string | null
           recruiter_notes: string | null
           score: number | null
           session_id: string | null
@@ -177,8 +183,14 @@ export type Database = {
           candidate_id?: string | null
           completed_at?: string | null
           created_at?: string
+          expires_at?: string | null
           id?: string
+          integrity_flagged?: boolean
+          integrity_score?: number | null
+          integrity_summary?: Json
+          invite_token?: string
           invited_at?: string
+          opened_at?: string | null
           recruiter_notes?: string | null
           score?: number | null
           session_id?: string | null
@@ -190,8 +202,14 @@ export type Database = {
           candidate_id?: string | null
           completed_at?: string | null
           created_at?: string
+          expires_at?: string | null
           id?: string
+          integrity_flagged?: boolean
+          integrity_score?: number | null
+          integrity_summary?: Json
+          invite_token?: string
           invited_at?: string
+          opened_at?: string | null
           recruiter_notes?: string | null
           score?: number | null
           session_id?: string | null
@@ -233,6 +251,7 @@ export type Database = {
           duration_minutes: number
           expires_at: string | null
           id: string
+          interview_mode: string
           invitation_token: string
           job_role: string | null
           organization_id: string
@@ -255,6 +274,7 @@ export type Database = {
           duration_minutes?: number
           expires_at?: string | null
           id?: string
+          interview_mode?: string
           invitation_token?: string
           job_role?: string | null
           organization_id: string
@@ -277,6 +297,7 @@ export type Database = {
           duration_minutes?: number
           expires_at?: string | null
           id?: string
+          interview_mode?: string
           invitation_token?: string
           job_role?: string | null
           organization_id?: string
@@ -1077,6 +1098,108 @@ export type Database = {
             columns: ["subscription_id"]
             isOneToOne: false
             referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proctoring_events: {
+        Row: {
+          assessment_candidate_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json
+          session_id: string
+          severity: string
+        }
+        Insert: {
+          assessment_candidate_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          payload?: Json
+          session_id: string
+          severity?: string
+        }
+        Update: {
+          assessment_candidate_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          session_id?: string
+          severity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proctoring_events_assessment_candidate_id_fkey"
+            columns: ["assessment_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proctoring_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proctoring_recordings: {
+        Row: {
+          assessment_candidate_id: string | null
+          byte_size: number | null
+          chunk_index: number
+          created_at: string
+          ended_at: string | null
+          id: string
+          kind: string
+          mime_type: string | null
+          session_id: string
+          started_at: string
+          storage_path: string
+        }
+        Insert: {
+          assessment_candidate_id?: string | null
+          byte_size?: number | null
+          chunk_index?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          kind: string
+          mime_type?: string | null
+          session_id: string
+          started_at?: string
+          storage_path: string
+        }
+        Update: {
+          assessment_candidate_id?: string | null
+          byte_size?: number | null
+          chunk_index?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          kind?: string
+          mime_type?: string | null
+          session_id?: string
+          started_at?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proctoring_recordings_assessment_candidate_id_fkey"
+            columns: ["assessment_candidate_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proctoring_recordings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
             referencedColumns: ["id"]
           },
         ]

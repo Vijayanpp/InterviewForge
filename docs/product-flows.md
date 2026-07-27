@@ -43,6 +43,16 @@ TTS (Maya voice) → auto-listen → silence/mic stop → STT draft → edit opt
 
 Live interviews are **AI-generated**, not pulled from the bank by default. Bank drafts use `skipOpening` so they stay technical.
 
-## Recruiter / billing
+## Recruiter / proctored assessments
 
-Postgres schema for orgs, assessments, and subscription plans exists; full recruiter UI and billing metering are deferred. Plan rows are seeded for future use.
+1. Candidate opens **Recruiter** in the sidebar (`/become-recruiter`) → creates org → role becomes `interviewer`.
+2. Recruiter creates an assessment (`/recruiter/assessments/new`) → **Publish**.
+3. Invite candidate emails → each gets `/invite/<token>` (Resend if `RESEND_API_KEY` set; otherwise copy link from UI).
+4. Candidate signs in with the invited email → starts → AI interview room with **heavy proctoring** (webcam + screen recording, fullscreen, tab/clipboard locks, MediaPipe face checks).
+5. Recruiter opens the assessment → integrity score, event timeline, recording playback + link to interview report.
+
+Billing metering remains deferred (schema only).
+
+## Recruiter / billing (legacy note)
+
+Subscription plan rows are seeded for future metering.

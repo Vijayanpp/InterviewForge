@@ -149,7 +149,7 @@ CODE_EXECUTION_PROVIDER=judge0
 JUDGE0_URL=https://ce.judge0.com
 ```
 
-Full env list and hosted Supabase notes: [docs/setup.md](./docs/setup.md).
+Full env list, hosted Supabase, and **Google OAuth** (“Continue with Google”): [docs/setup.md](./docs/setup.md).
 
 ---
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -25,6 +25,12 @@ import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 export function LoginForm() {
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("error") === "auth_callback_failed") {
+      toast.error("Google sign-in failed. Check redirect URLs and try again.");
+    }
+  }, [searchParams]);
 
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),

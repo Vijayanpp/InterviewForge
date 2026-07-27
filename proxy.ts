@@ -23,6 +23,7 @@ const ROLE_ROUTE_PREFIXES: Record<string, "candidate" | "interviewer" | "admin">
   "/practice": "candidate",
   "/profile": "candidate",
   "/settings": "candidate",
+  "/become-recruiter": "candidate",
   "/recruiter": "interviewer",
   "/admin": "admin",
 };
@@ -30,6 +31,7 @@ const ROLE_ROUTE_PREFIXES: Record<string, "candidate" | "interviewer" | "admin">
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.includes(pathname)) return true;
   if (pathname.startsWith("/auth/")) return true;
+  if (pathname.startsWith("/invite/")) return true;
   if (pathname.startsWith("/_next") || pathname.startsWith("/api/")) return true;
   if (pathname.match(/\.(png|jpg|jpeg|svg|ico|css|js|map|webmanifest)$/)) return true;
   return false;

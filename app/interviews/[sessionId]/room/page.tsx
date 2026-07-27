@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { getSessionById } from "@/lib/repositories/interview-sessions.repo";
 import { getTechnologiesByIds, getTopicsByIds } from "@/lib/repositories/technologies.repo";
 import { InterviewRoom } from "@/components/interview-room/interview-room";
+import { maybeProctorWrap } from "@/components/proctoring/maybe-proctor-wrap";
 
 export const metadata: Metadata = {
   title: "Interview in Progress",
@@ -39,7 +40,7 @@ export default async function InterviewRoomPage({
     getTopicsByIds(supabase, session.topic_ids),
   ]);
 
-  return (
+  const room = (
     <InterviewRoom
       sessionId={sessionId}
       interviewType={session.interview_type}
@@ -49,4 +50,6 @@ export default async function InterviewRoomPage({
       topicNames={topics.map((t) => t.name)}
     />
   );
+
+  return maybeProctorWrap(sessionId, room);
 }
