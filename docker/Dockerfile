@@ -31,6 +31,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3100
+# Listen on all interfaces inside the container (required for Hostinger/Docker).
+# This is NOT your public site URL — do not remove. Browser redirects use APP_URL
+# / X-Forwarded-Host via lib/app-url.ts, not this value.
 ENV HOSTNAME=0.0.0.0
 
 RUN addgroup --system --gid 1001 nodejs \

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getPublicAppOriginFromRequest } from "@/lib/app-url";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 /** Only allow same-origin relative paths (block open redirects). */
@@ -13,9 +14,12 @@ function safeNextPath(raw: string | null): string {
  * OAuth (Google, etc.) redirect target. Exchanges the PKCE `code` for a
  * session, then routes the user to `next` (default `/dashboard`).
  * First-time candidates are redirected to onboarding by the candidate layout.
+ *
+ * Uses APP_URL / forwarded Host — never raw nextUrl.origin (Docker 0.0.0.0).
  */
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = request.nextUrl;
+  const { searchParams } = request.nextUrl;
+  const origin = getPublicAppOriginFromRequest(request);
   const code = searchParams.get("code");
   const next = safeNextPath(searchParams.get("next"));
 

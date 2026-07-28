@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getPublicAppOriginFromRequest } from "@/lib/app-url";
 import { updateSupabaseSession } from "@/lib/supabase/middleware-client";
 
 const PUBLIC_PATHS = [
@@ -44,6 +45,11 @@ function matchProtectedPrefix(pathname: string): "candidate" | "interviewer" | "
   return null;
 }
 
+function absoluteRedirect(path: string, request: NextRequest): NextResponse {
+  const origin = getPublicAppOriginFromRequest(request);
+  return NextResponse.redirect(new URL(path, `${origin}/`));
+}
+
 /**
  * Network-boundary proxy (formerly "middleware" pre-Next.js 16): refreshes
  * the Supabase session cookie on every request and enforces coarse
@@ -53,8 +59,27 @@ function matchProtectedPrefix(pathname: string): "candidate" | "interviewer" | "
  * the `requireRole` server helper used by route handlers/Server Components.
  */
 export async function proxy(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Supabase falls back to Site URL (often `/`) with `?code=` when
+  // `redirectTo` is missing from the allowlist. Forward to the PKCE callback.
+  if (
+    searchParams.has("code") &&
+    !pathname.startsWith("/auth/callback") &&
+    !pathname.startsWith("/auth/confirm")
+  ) {
+    const origin = getPublicAppOriginFromRequest(request);
+    const callback = new URL("/auth/callback", `${origin}/`);
+    searchParams.forEach((value, key) => {
+      callback.searchParams.set(key, value);
+    });
+    if (!callback.searchParams.has("next")) {
+      callback.searchParams.set("next", "/dashboard");
+    }
+    return NextResponse.redirect(callback);
+  }
+
   const { response, user, supabase } = await updateSupabaseSession(request);
-  const { pathname } = request.nextUrl;
 
   if (isPublicPath(pathname)) {
     return response;
@@ -64,14 +89,13 @@ export async function proxy(request: NextRequest) {
   if (!requiredRole) return response;
 
   if (!user) {
-    const redirectUrl = new URL("/login", request.url);
+    const origin = getPublicAppOriginFromRequest(request);
+    const redirectUrl = new URL("/login", `${origin}/`);
     redirectUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
   if (requiredRole === "candidate") {
-    // Any authenticated user may access candidate-space routes (interviewers
-    // and admins can also practise); no further check needed.
     return response;
   }
 
@@ -84,11 +108,11 @@ export async function proxy(request: NextRequest) {
   const roleName = (profile?.roles as { name?: string } | null)?.name;
 
   if (requiredRole === "admin" && roleName !== "admin") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return absoluteRedirect("/dashboard", request);
   }
 
   if (requiredRole === "interviewer" && roleName !== "interviewer" && roleName !== "admin") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return absoluteRedirect("/dashboard", request);
   }
 
   return response;
