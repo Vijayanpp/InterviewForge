@@ -118,6 +118,8 @@ Google Cloud redirect URI for local must be `http://127.0.0.1:54321/auth/v1/call
 | Symptom | Likely cause |
 | --- | --- |
 | Toast: “Google sign-in is not available right now.” | Provider disabled or Client ID/secret wrong |
+| Land on `/?code=...` (home, not dashboard) | Add exact `https://<domain>/auth/callback` under **Redirect URLs**. Redeploy so proxy can forward `?code=` → `/auth/callback`. |
+| Browser opens `https://0.0.0.0:3000/dashboard` | Docker `HOSTNAME=0.0.0.0` polluted `request.nextUrl.origin`. Set production `APP_URL` to the public HTTPS origin and redeploy (auth/proxy use `getPublicAppOrigin`). |
 | Redirect to `/login?error=auth_callback_failed` | Site URL / Redirect URLs mismatch (port or path) |
 | Google “redirect_uri_mismatch” | Wrong URI in Google Cloud (must be Supabase `/auth/v1/callback`) |
 
@@ -155,7 +157,7 @@ Full list: [`.env.example`](../.env.example). Validated in [`lib/env.ts`](../lib
 | `VOICE_MAX_ANSWER_SECONDS` | Max recording length |
 | `VOICE_SILENCE_MS` | Silence auto-stop threshold |
 | `VOICE_MAX_UPLOAD_BYTES` | Max audio upload size |
-| `APP_URL` | Public app origin (local: `http://localhost:3100`) |
+| `APP_URL` | Public app origin (local: `http://localhost:3100`). **Required in production** (e.g. Hostinger): `https://plum-squirrel-355450.hostingersite.com` — no trailing slash. Auth routes and proxy redirects use this so Docker never sends users to `https://0.0.0.0:PORT`. |
 | `RATE_LIMIT_WINDOW_MS` / `RATE_LIMIT_MAX_REQUESTS` | API rate limits |
 | `LOG_LEVEL` | Pino level |
 
@@ -177,7 +179,16 @@ App image expects an existing Supabase project (does not bundle Postgres):
 docker compose -f docker/docker-compose.yml --env-file .env.local up --build
 ```
 
-Uses Next.js `output: "standalone"`.
+Uses Next.js `output: "standalone"`. The image sets `HOSTNAME=0.0.0.0` so the process can listen in the container — that value must **not** be used for browser redirects.
+
+### Hostinger / production checklist
+
+1. Set env `APP_URL=https://plum-squirrel-355450.hostingersite.com` (your real public origin, no trailing slash).
+2. Redeploy after changing auth/proxy code.
+3. Supabase **Authentication → URL Configuration**:
+   - **Site URL**: `https://plum-squirrel-355450.hostingersite.com`
+   - **Redirect URLs** must include: `https://plum-squirrel-355450.hostingersite.com/auth/callback`
+4. Google Cloud authorized redirect URI remains the Supabase callback: `https://<project-ref>.supabase.co/auth/v1/callback` (not the Next.js URL).
 
 ## Admin access
 

@@ -42,7 +42,7 @@ const serverEnvSchema = z.object({
   VOICE_SILENCE_MS: z.coerce.number().int().positive().default(2500),
   VOICE_MAX_UPLOAD_BYTES: z.coerce.number().int().positive().default(10_485_760),
 
-  APP_URL: z.string().url().default("http://localhost:3000"),
+  APP_URL: z.string().url().default("http://localhost:3100"),
 
   /** Optional — invite emails no-op / log-only when unset (local/dev). */
   RESEND_API_KEY: z.preprocess(
