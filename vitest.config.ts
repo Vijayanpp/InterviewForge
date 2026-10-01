@@ -10,11 +10,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": dirname,
+      "server-only": path.join(dirname, "tests/stubs/server-only.ts"),
     },
   },
   test: {
     environment: "node",
     globals: true,
+    setupFiles: ["tests/unit/setup-env.ts"],
     include: ["tests/unit/**/*.test.ts", "tests/unit/**/*.test.tsx"],
     exclude: ["tests/e2e/**", "tests/integration/**", "node_modules/**"],
   },

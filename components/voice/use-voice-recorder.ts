@@ -50,7 +50,7 @@ export function useVoiceRecorder(opts?: {
   const rafRef = useRef<number | null>(null);
   const silenceStartedRef = useRef<number | null>(null);
   const maxSeconds = opts?.maxSeconds ?? 180;
-  const silenceMs = opts?.silenceMs ?? 2500;
+  const silenceMs = opts?.silenceMs ?? 0;
   const onAutoStopRef = useRef(opts?.onAutoStop);
   onAutoStopRef.current = opts?.onAutoStop;
 
@@ -97,7 +97,7 @@ export function useVoiceRecorder(opts?: {
         onAutoStopRef.current?.();
         return;
       }
-      if (rms < 0.02) {
+      if (silenceMs > 0 && rms < 0.02) {
         if (silenceStartedRef.current == null) silenceStartedRef.current = Date.now();
         else if (Date.now() - silenceStartedRef.current >= silenceMs && elapsed > 2) {
           onAutoStopRef.current?.();

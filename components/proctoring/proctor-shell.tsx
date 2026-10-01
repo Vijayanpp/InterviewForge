@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { AntiCheatingSettings } from "@/types/domain/assessment";
@@ -32,6 +33,76 @@ async function createFaceDetector(): Promise<FaceDetector | null> {
   }
 }
 
+function ProctorHud({
+  warning,
+  violationCount,
+  showWebcam,
+  requireFullscreen,
+  bindWebcam,
+  onReenterFullscreen,
+}: {
+  warning: string | null;
+  violationCount: number;
+  showWebcam: boolean;
+  requireFullscreen: boolean;
+  bindWebcam: (node: HTMLVideoElement | null) => void;
+  onReenterFullscreen: () => void;
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const showFullscreenAction =
+    requireFullscreen && !!warning && /fullscreen/i.test(warning);
+
+  return createPortal(
+    <aside
+      className="pointer-events-none fixed bottom-32 right-6 z-40 flex max-w-[min(16rem,calc(100vw-1.5rem))] flex-col items-end gap-sm"
+      aria-live="polite"
+    >
+      {warning ? (
+        <div className="pointer-events-auto w-max max-w-full rounded-lg bg-destructive px-md py-sm text-sm text-destructive-foreground shadow-lg">
+          <p className="leading-snug">{warning}</p>
+          {showFullscreenAction ? (
+            <button
+              type="button"
+              className="mt-xs font-label-sm text-label-sm underline underline-offset-2"
+              onClick={onReenterFullscreen}
+            >
+              Return to fullscreen
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {showWebcam ? (
+        <div className="relative">
+          <video
+            ref={bindWebcam}
+            muted
+            playsInline
+            className="h-20 w-20 rounded-lg border border-border bg-black object-cover shadow-md"
+          />
+          {violationCount > 0 ? (
+            <span className="absolute -left-1 -top-1 min-w-5 rounded-full bg-destructive px-1.5 py-px text-center text-[10px] font-semibold leading-4 text-destructive-foreground shadow">
+              {violationCount}
+            </span>
+          ) : null}
+        </div>
+      ) : violationCount > 0 ? (
+        <span className="rounded-full bg-background/95 px-sm py-0.5 text-xs text-muted-foreground shadow">
+          Violations: {violationCount}
+        </span>
+      ) : null}
+    </aside>,
+    document.body
+  );
+}
+
 export function ProctorShell({
   sessionId,
   settings,
@@ -51,6 +122,7 @@ export function ProctorShell({
   const chunkIndexRef = useRef({ webcam: 0, screen: 0 });
   const detectorRef = useRef<FaceDetector | null>(null);
   const faceStateRef = useRef<"ok" | "no_face" | "multi_face">("ok");
+  const showWebcam = settings.requireWebcam || settings.recordWebcam;
 
   const postEvent = useCallback(
     async (eventType: string, severity: "info" | "warning" | "critical" = "info") => {
@@ -72,6 +144,26 @@ export function ProctorShell({
     },
     [sessionId]
   );
+
+  const bindWebcam = useCallback((node: HTMLVideoElement | null) => {
+    webcamRef.current = node;
+    const stream = webcamStreamRef.current;
+    if (!node || !stream) return;
+    if (node.srcObject !== stream) {
+      node.srcObject = stream;
+    }
+    void node.play().catch(() => undefined);
+  }, []);
+
+  const reenterFullscreen = useCallback(async () => {
+    try {
+      await document.documentElement.requestFullscreen();
+      setWarning(null);
+      await postEvent("fullscreen_enter");
+    } catch {
+      setWarning("Fullscreen exited — click to return.");
+    }
+  }, [postEvent]);
 
   const uploadChunk = useCallback(
     async (kind: "webcam" | "screen", blob: Blob) => {
@@ -275,26 +367,16 @@ export function ProctorShell({
   }
 
   return (
-    <div className="relative min-h-screen">
-      <div className="pointer-events-none fixed right-4 top-4 z-50 flex flex-col items-end gap-sm">
-        <video
-          ref={webcamRef}
-          muted
-          playsInline
-          className="pointer-events-none h-24 w-24 rounded-lg border border-border object-cover shadow-md"
-        />
-        {warning ? (
-          <div className="pointer-events-none max-w-xs rounded-lg bg-destructive px-md py-sm text-sm text-destructive-foreground shadow">
-            {warning}
-          </div>
-        ) : null}
-        {violationCount > 0 ? (
-          <span className="rounded-full bg-background/90 px-sm py-0.5 text-xs text-muted-foreground shadow">
-            Violations: {violationCount}
-          </span>
-        ) : null}
-      </div>
+    <>
+      <ProctorHud
+        warning={warning}
+        violationCount={violationCount}
+        showWebcam={showWebcam}
+        requireFullscreen={settings.requireFullscreen}
+        bindWebcam={bindWebcam}
+        onReenterFullscreen={() => void reenterFullscreen()}
+      />
       {children}
-    </div>
+    </>
   );
 }

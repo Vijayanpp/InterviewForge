@@ -67,7 +67,7 @@ export function VoiceRoom({
   technologyNames,
   topicNames,
   maxAnswerSeconds = 180,
-  silenceMs = 2500,
+  silenceMs = 0,
 }: VoiceRoomProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);

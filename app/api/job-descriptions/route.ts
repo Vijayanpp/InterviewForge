@@ -20,5 +20,15 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     source: "paste",
   });
 
+  void import("@/lib/services/knowledge-ingest").then(({ ingestKnowledgeText }) =>
+    ingestKnowledgeText(supabase, {
+      sourceType: "job_description",
+      sourceId: jobDescription.id,
+      text: body.content,
+      candidateId: ctx.userId,
+      title: body.title ?? body.company ?? "Job description",
+    })
+  );
+
   return NextResponse.json({ jobDescription }, { status: 201 });
 });

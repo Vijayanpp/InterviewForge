@@ -42,7 +42,7 @@ export function VoiceControls({
       )}
       {micActive && (
         <p className="font-label-md text-label-md font-semibold text-primary">
-          Listening — pause when you&apos;re done; then review and tap Finish Answer
+          Listening — the mic stays on until you pause or tap it, then review and Finish Answer
         </p>
       )}
 

@@ -77,5 +77,15 @@ export const POST = withApiHandler(async (request: NextRequest) => {
     isPrimary: true,
   });
 
+  void import("@/lib/services/knowledge-ingest").then(({ ingestKnowledgeText }) =>
+    ingestKnowledgeText(supabase, {
+      sourceType: "resume",
+      sourceId: resume.id,
+      text: parsedText,
+      candidateId: ctx.userId,
+      title: safeName,
+    })
+  );
+
   return NextResponse.json({ resume }, { status: 201 });
 });

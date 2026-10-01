@@ -11,6 +11,33 @@ Factory: `getAiProvider()` ← `AI_PROVIDER`.
 
 Capabilities: `generateQuestion`, `generateFollowUp`, `evaluateAnswer`, `generateReport`, `generateStudyPlan`, `generateCodingChallenge`.
 
+## LangGraph interview agents (`lib/agents/`, `lib/graph/`)
+
+Live interviews default to `INTERVIEW_ENGINE=graph`. Next.js route handlers stay the BFF; they call `interview-engine`, which invokes compiled LangGraph graphs (`prep` / `ask` / `grade` / `close`).
+
+Specialist LLM calls go through LangChain `ChatOpenAI.withStructuredOutput`. Optional LangSmith tracing:
+
+```env
+LANGSMITH_TRACING=true
+LANGSMITH_API_KEY=lsv2_...
+LANGSMITH_PROJECT=interviewforge
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+```
+
+Retrieval (Business-Research port, plus expansion):
+
+1. **Query expansion** — same intent, richer terms
+2. **Query decomposition** — split compound objectives
+3. **Multi-query** — different wording / angles
+4. Parallel retrieve (pgvector + question bank + session resume/JD + topic notes)
+5. Dedup + rerank
+
+Specialists: planner, interviewer, technical / behavioural / coding evaluators (wires unused `behavioural_evaluator` and `coding_evaluator` prompts when published), evidence validator, supervisor, report synthesizer.
+
+Hard caps still come from `decideNextAction` (time / max questions). Set `INTERVIEW_ENGINE=legacy` to skip the graph.
+
+Mock + `MemorySaver` keep CI offline. Client components never import `@langchain/*`.
+
 ### Prompts (not training)
 
 Behavior is **prompt engineering**, not fine-tuning.
@@ -75,7 +102,7 @@ APIs: `/api/interviews/[id]/voice/transcribe`, `.../tts`.
 Room UX ([`components/voice/`](../components/voice/)):
 
 1. TTS speaks the question (auto-listen after speak).
-2. Silence or mic stop → STT → **editable** draft.
+2. Mic stays on until pause or mic stop → STT → **editable** draft.
 3. Candidate taps **Finish Answer** to submit (no auto-submit on silence).
 
 Scoring uses the same interview engine as text. Anti-bias rules in evaluator/report prompts forbid judging accent or demographics.

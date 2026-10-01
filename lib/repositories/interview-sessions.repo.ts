@@ -43,6 +43,7 @@ export async function updateSession(
     current_question_index: number;
     started_at: string | null;
     ended_at: string | null;
+    config: InterviewSession["config"];
   }>
 ): Promise<InterviewSession> {
   const { data, error } = await supabase

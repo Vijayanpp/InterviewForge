@@ -22,6 +22,20 @@ const serverEnvSchema = z.object({
   AI_PROVIDER: z.enum(["mock", "openai"]).default("mock"),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().default("gpt-4o-mini"),
+  OPENAI_EMBEDDING_MODEL: z.string().default("text-embedding-3-small"),
+  /** Graph is the default interview orchestrator. Set `legacy` to use the pre-LangGraph engine. */
+  INTERVIEW_ENGINE: z.enum(["graph", "legacy"]).default("graph"),
+
+  LANGSMITH_TRACING: z.preprocess((value) => {
+    if (value === true || value === "true" || value === "1") return true;
+    return false;
+  }, z.boolean().default(false)),
+  LANGSMITH_API_KEY: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.string().optional()
+  ),
+  LANGSMITH_PROJECT: z.string().default("interviewforge"),
+  LANGSMITH_ENDPOINT: z.string().url().default("https://api.smith.langchain.com"),
 
   CODE_EXECUTION_PROVIDER: z.enum(["mock", "judge0"]).default("mock"),
   JUDGE0_URL: z.preprocess(
@@ -39,7 +53,8 @@ const serverEnvSchema = z.object({
   VOICE_TTS_MODEL: z.string().default("gpt-4o-mini-tts"),
   VOICE_TTS_VOICE: z.string().default("nova"),
   VOICE_MAX_ANSWER_SECONDS: z.coerce.number().int().positive().default(180),
-  VOICE_SILENCE_MS: z.coerce.number().int().positive().default(2500),
+  /** 0 = keep the mic open until the candidate pauses, taps stop, or hits max duration. */
+  VOICE_SILENCE_MS: z.coerce.number().int().min(0).default(0),
   VOICE_MAX_UPLOAD_BYTES: z.coerce.number().int().positive().default(10_485_760),
 
   APP_URL: z.string().url().default("http://localhost:3100"),
@@ -104,6 +119,13 @@ export function getServerEnv(): ServerEnv {
     );
   }
 
+  if (parsed.data.LANGSMITH_TRACING && !parsed.data.LANGSMITH_API_KEY?.trim()) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[env] LANGSMITH_TRACING is on but LANGSMITH_API_KEY is empty. Agent traces will not be sent."
+    );
+  }
+
   cachedEnv = parsed.data;
   return cachedEnv;
 }
@@ -146,6 +168,10 @@ export function resolveCodeExecutionProviderName(): "mock" | "judge0" {
 }
 
 /** Resolves the effective voice provider. OpenAI is fail-closed when requested. */
+export function resolveInterviewEngine(): "graph" | "legacy" {
+  return getServerEnv().INTERVIEW_ENGINE;
+}
+
 export function resolveVoiceProviderName(): "mock" | "openai" {
   const env = getServerEnv();
   if (env.VOICE_PROVIDER === "openai") {

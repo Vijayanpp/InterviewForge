@@ -26,6 +26,9 @@ pnpm test:all               # unit + integration + e2e
 ## What unit tests cover (high level)
 
 - Scoring calculator and adaptive `decideNextAction`
+- Query expansion / decomposition / multi-query mocks
+- Retrieval pipeline (chunk, dedup, rerank) and supervisor/graph routing
+- LangGraph prep → ask opening (Maya greeting)
 - Zod schemas for AI structured outputs
 - `MockAiProvider` determinism + opening greeting / `skipOpening`
 - Shared `opening-question` helper

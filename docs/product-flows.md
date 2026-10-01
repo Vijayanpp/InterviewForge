@@ -24,7 +24,7 @@ Opening greeting (Maya) → answer → evaluate → follow-up or next question �
 
 ### Voice interview loop
 
-TTS (Maya voice) → auto-listen → silence/mic stop → STT draft → edit optional → **Finish Answer** → same adaptive engine as text.
+TTS (Maya voice) → auto-listen (stays on until pause/mic stop) → STT draft → edit optional → **Finish Answer** → same adaptive engine as text.
 
 ### Coding / mixed
 

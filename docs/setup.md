@@ -147,6 +147,12 @@ Full list: [`.env.example`](../.env.example). Validated in [`lib/env.ts`](../lib
 | `AI_PROVIDER` | `mock` \| `openai` |
 | `OPENAI_API_KEY` | OpenAI key for chat + voice when providers are openai |
 | `OPENAI_MODEL` | Default chat model (e.g. `gpt-4o-mini`) |
+| `OPENAI_EMBEDDING_MODEL` | Embedding model for knowledge chunks (default `text-embedding-3-small`) |
+| `INTERVIEW_ENGINE` | `graph` (LangGraph, default) \| `legacy` |
+| `LANGSMITH_TRACING` | `true` to send LangChain/LangGraph traces to LangSmith |
+| `LANGSMITH_API_KEY` | LangSmith API key (optional; traces skipped when empty) |
+| `LANGSMITH_PROJECT` | LangSmith project name (default `interviewforge`) |
+| `LANGSMITH_ENDPOINT` | LangSmith API URL (default `https://api.smith.langchain.com`) |
 | `CODE_EXECUTION_PROVIDER` | `mock` \| `judge0` |
 | `JUDGE0_URL` | Judge0 CE endpoint |
 | `JUDGE0_AUTH_TOKEN` / `JUDGE0_AUTH_HEADER` | Optional Judge0 auth |
@@ -155,7 +161,7 @@ Full list: [`.env.example`](../.env.example). Validated in [`lib/env.ts`](../lib
 | `VOICE_TTS_MODEL` | TTS model (default `gpt-4o-mini-tts`) |
 | `VOICE_TTS_VOICE` | TTS voice (default `nova`) |
 | `VOICE_MAX_ANSWER_SECONDS` | Max recording length |
-| `VOICE_SILENCE_MS` | Silence auto-stop threshold |
+| `VOICE_SILENCE_MS` | Optional silence auto-stop in ms. `0` (default) keeps the mic open until pause/stop |
 | `VOICE_MAX_UPLOAD_BYTES` | Max audio upload size |
 | `APP_URL` | Public app origin (local: `http://localhost:3100`). **Required in production** (e.g. Hostinger): `https://plum-squirrel-355450.hostingersite.com` — no trailing slash. Auth routes and proxy redirects use this so Docker never sends users to `https://0.0.0.0:PORT`. |
 | `RATE_LIMIT_WINDOW_MS` / `RATE_LIMIT_MAX_REQUESTS` | API rate limits |

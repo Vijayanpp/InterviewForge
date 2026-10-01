@@ -39,7 +39,7 @@ Default AI interviewer persona: **Maya**, a Technical Architect with ~20 years o
 | --- | --- |
 | Interview wizard | Pick type (technical, behavioural, resume/JD-based, coding, mixed…), stack, difficulty, duration, and **text or voice** delivery |
 | Adaptive AI interviewer | Follow-ups that probe gaps; no mid-interview score leaks |
-| Voice interviews | TTS speaks questions; silence/mic stop → transcript → edit → **Finish Answer** |
+| Voice interviews | TTS speaks questions; mic stays on until you pause or tap stop → transcript → edit → **Finish Answer** |
 | Coding practice & rounds | Seeded challenges + Monaco editor; Run / Submit with mock fixtures or Judge0 |
 | Dashboard | Readiness score, averages, interview count, score improvement chart, weak topics |
 | Reports | Full post-session report with strengths, gaps, and study plans |
@@ -97,7 +97,7 @@ Coding-only interviews go straight to the coding room. **Mixed** runs a short te
 | --- | --- |
 | App | Next.js App Router, TypeScript (strict), Tailwind, shadcn/ui |
 | Auth & data | Supabase Auth, Postgres (RLS), Storage (resumes, avatars) |
-| AI | Swappable `mock` / `openai` — versioned prompts in DB, Zod-validated outputs |
+| AI | Swappable `mock` / `openai` — LangGraph agents, versioned prompts, Zod-validated outputs |
 | Voice | Swappable `mock` / `openai` (Whisper STT + TTS) |
 | Code runs | Swappable `mock` / Judge0 |
 | Tests | Vitest (unit + RLS) · Playwright (e2e) |
@@ -170,16 +170,13 @@ Full env list, hosted Supabase, and **Google OAuth** (“Continue with Google”
 
 ## Architecture (short)
 
+Next.js is the BFF. Live interviews run a LangGraph graph (plan → retrieve → interview → evaluate → supervise → report). Resume/JD and the question bank are retrieved with expansion, decomposition, and multi-query — not stuffed whole into one prompt.
+
 ```
-app/                  Marketing, auth, candidate, admin, live interviews, API
-components/           Wizard, rooms, voice, coding, admin, settings
-lib/ai|voice|…        Swappable providers + interview-engine services
-lib/repositories/     Supabase queries only
-supabase/             Migrations + seed
-docs/                 Full documentation
+UI rooms  →  /api/interviews/*  →  interview-engine  →  LangGraph  →  Supabase
 ```
 
-See [docs/architecture.md](./docs/architecture.md).
+See **[docs/architecture.md](./docs/architecture.md)** for the current architecture, **[docs/folder-structure.md](./docs/folder-structure.md)** for the tree, and **[docs/files/README.md](./docs/files/README.md)** for a file-by-file catalog.
 
 ---
 

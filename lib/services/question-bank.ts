@@ -42,7 +42,7 @@ export async function generateQuestionDraft(
     skipOpening: true,
   });
 
-  return createQuestionBankEntry(
+  const entry = await createQuestionBankEntry(
     supabase,
     {
       technologyId: input.technologyId,
@@ -63,4 +63,15 @@ export async function generateQuestionDraft(
     createdBy,
     "ai"
   );
+
+  void import("@/lib/services/knowledge-ingest").then(({ ingestKnowledgeText }) =>
+    ingestKnowledgeText(supabase, {
+      sourceType: "question_bank",
+      sourceId: entry.id,
+      text: `${entry.title ?? ""}\n${entry.body}`,
+      title: entry.title,
+    })
+  );
+
+  return entry;
 }

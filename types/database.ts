@@ -1696,6 +1696,89 @@ export type Database = {
           },
         ]
       }
+      interview_events: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          session_id: string
+          stage: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          session_id: string
+          stage: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          session_id?: string
+          stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_chunks: {
+        Row: {
+          candidate_id: string | null
+          content: string
+          created_at: string
+          embedding: string | null
+          id: string
+          metadata: Json
+          session_id: string | null
+          source_id: string | null
+          source_type: Database["public"]["Enums"]["knowledge_source_type"]
+        }
+        Insert: {
+          candidate_id?: string | null
+          content: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+          session_id?: string | null
+          source_id?: string | null
+          source_type: Database["public"]["Enums"]["knowledge_source_type"]
+        }
+        Update: {
+          candidate_id?: string | null
+          content?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+          session_id?: string | null
+          source_id?: string | null
+          source_type?: Database["public"]["Enums"]["knowledge_source_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_chunks_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_chunks_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usage_records: {
         Row: {
           created_at: string
@@ -1749,6 +1832,22 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_interviewer_or_admin: { Args: never; Returns: boolean }
       is_org_member: { Args: { org_id: string }; Returns: boolean }
+      match_knowledge_chunks: {
+        Args: {
+          query_embedding: number[]
+          match_count?: number
+          filter_candidate?: string | null
+          filter_source?: Database["public"]["Enums"]["knowledge_source_type"] | null
+        }
+        Returns: {
+          content: string
+          id: string
+          metadata: Json
+          similarity: number
+          source_id: string | null
+          source_type: Database["public"]["Enums"]["knowledge_source_type"]
+        }[]
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
@@ -1773,6 +1872,12 @@ export type Database = {
         | "borderline"
         | "not_ready_yet"
       interview_mode: "text" | "voice" | "coding"
+      knowledge_source_type:
+        | "resume"
+        | "job_description"
+        | "question_bank"
+        | "topic_knowledge"
+        | "session_summary"
       interview_type:
         | "technical"
         | "coding"
@@ -1955,6 +2060,13 @@ export const Constants = {
         "not_ready_yet",
       ],
       interview_mode: ["text", "voice", "coding"],
+      knowledge_source_type: [
+        "resume",
+        "job_description",
+        "question_bank",
+        "topic_knowledge",
+        "session_summary",
+      ],
       interview_type: [
         "technical",
         "coding",

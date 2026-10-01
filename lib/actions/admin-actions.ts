@@ -188,7 +188,15 @@ export async function createQuestionAction(input: CreateQuestionBankEntryInput):
   const supabase = await createSupabaseServerClient();
 
   try {
-    await createQuestionBankEntry(supabase, parsed.data, ctx.userId, "admin");
+    const entry = await createQuestionBankEntry(supabase, parsed.data, ctx.userId, "admin");
+    void import("@/lib/services/knowledge-ingest").then(({ ingestKnowledgeText }) =>
+      ingestKnowledgeText(supabase, {
+        sourceType: "question_bank",
+        sourceId: entry.id,
+        text: `${entry.title ?? ""}\n${entry.body}`,
+        title: entry.title,
+      })
+    );
   } catch (err) {
     logger.error({ err }, "createQuestionAction failed");
     return { success: false, error: "Could not create question." };
