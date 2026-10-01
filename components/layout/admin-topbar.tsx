@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import type { Profile } from "@/types/domain/profile";
 import { ThemePicker } from "@/components/theme/theme-picker";
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
+import { LayoutDashboard, Cpu, ListTree, HelpCircle, Code2 } from "lucide-react";
 
 const TITLES: Array<[string, string]> = [
   ["/admin/dashboard", "Overview"],
@@ -33,11 +35,21 @@ export function AdminTopbar({ profile }: { profile: Profile }) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-lg backdrop-blur-md">
-      <div className="flex items-center lg:hidden">
+      <div className="flex items-center gap-sm lg:hidden">
+        <MobileNavSheet
+          label="Admin"
+          items={[
+            { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
+            { href: "/admin/technologies", label: "Technologies", icon: Cpu },
+            { href: "/admin/topics", label: "Topics", icon: ListTree },
+            { href: "/admin/questions", label: "Question Bank", icon: HelpCircle },
+            { href: "/admin/challenges", label: "Coding Challenges", icon: Code2 },
+          ]}
+        />
         <BrandLogo variant="mark" href="/admin/dashboard" />
       </div>
       <div className="hidden items-center lg:flex">
-        <h2 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h2>
+        <h1 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h1>
       </div>
       <div className="flex items-center gap-md">
         <ThemePicker variant="topbar" />

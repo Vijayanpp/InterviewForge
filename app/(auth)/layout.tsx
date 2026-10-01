@@ -3,6 +3,7 @@ import { AuthShell } from "@/components/auth/auth-shell";
 
 export const metadata: Metadata = {
   title: "Sign in",
+  robots: { index: true, follow: true },
 };
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

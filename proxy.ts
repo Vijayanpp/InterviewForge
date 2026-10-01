@@ -15,6 +15,10 @@ const PUBLIC_PATHS = [
   "/contact",
   "/privacy",
   "/terms",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
+  "/llms.txt",
 ];
 
 const ROLE_ROUTE_PREFIXES: Record<string, "candidate" | "interviewer" | "admin"> = {
@@ -34,7 +38,10 @@ function isPublicPath(pathname: string): boolean {
   if (pathname.startsWith("/auth/")) return true;
   if (pathname.startsWith("/invite/")) return true;
   if (pathname.startsWith("/_next") || pathname.startsWith("/api/")) return true;
-  if (pathname.match(/\.(png|jpg|jpeg|svg|ico|css|js|map|webmanifest)$/)) return true;
+  if (pathname.match(/\.(png|jpg|jpeg|svg|ico|css|js|map|webmanifest|txt)$/)) return true;
+  if (pathname.startsWith("/opengraph-image") || pathname.startsWith("/icon") || pathname.startsWith("/apple-icon")) {
+    return true;
+  }
   return false;
 }
 

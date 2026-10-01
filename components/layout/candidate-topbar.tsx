@@ -5,6 +5,15 @@ import type { Profile } from "@/types/domain/profile";
 import { ThemePicker } from "@/components/theme/theme-picker";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
+import {
+  LayoutDashboard,
+  PlayCircle,
+  History,
+  Code2,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
 
 const TITLES: Array<[string, string]> = [
   ["/dashboard", "Dashboard"],
@@ -38,11 +47,22 @@ export function CandidateTopbar({ profile }: { profile: Profile }) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-lg backdrop-blur-md">
-      <div className="flex items-center lg:hidden">
+      <div className="flex items-center gap-sm lg:hidden">
+        <MobileNavSheet
+          label="Candidate"
+          items={[
+            { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+            { href: "/interviews/new", label: "Start Interview", icon: PlayCircle },
+            { href: "/practice", label: "Coding Challenges", icon: Code2 },
+            { href: "/interviews/history", label: "Interview History", icon: History },
+            { href: "/settings", label: "Settings", icon: Settings },
+            { href: "/become-recruiter", label: "Recruiter", icon: ShieldCheck },
+          ]}
+        />
         <BrandLogo variant="mark" href="/dashboard" />
       </div>
       <div className="hidden items-center lg:flex">
-        <h2 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h2>
+        <h1 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h1>
       </div>
       <div className="flex items-center gap-md">
         <ThemePicker variant="topbar" />

@@ -7,11 +7,11 @@
 | [`LICENSE`](../../LICENSE) | MIT |
 | [`AGENTS.md`](../../AGENTS.md) | Cursor/agent note: Next.js 16 docs may differ from training data |
 | [`CLAUDE.md`](../../CLAUDE.md) | Forwards to `AGENTS.md` |
-| [`package.json`](../../package.json) | Scripts (`dev` on port 3100, `db:*`, `test:*`, Judge0) and deps |
+| [`package.json`](../../package.json) | Scripts (`dev` on 3100, `build` uses webpack, `db:*`, `test:*`) and deps |
 | [`pnpm-lock.yaml`](../../pnpm-lock.yaml) | Lockfile |
 | [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml) | Overrides only (not a multi-package workspace) |
 | [`tsconfig.json`](../../tsconfig.json) | Strict TS, `@/*` → repo root |
-| [`next.config.ts`](../../next.config.ts) | `output: "standalone"`; `serverExternalPackages` for LangChain / LangGraph / LangSmith |
+| [`next.config.ts`](../../next.config.ts) | `output: "standalone"`; security headers; image formats; LangChain externals |
 | [`proxy.ts`](../../proxy.ts) | Next.js 16 proxy: refresh Supabase session, coarse RBAC by path prefix |
 | [`components.json`](../../components.json) | shadcn/ui config |
 | [`playwright.config.ts`](../../playwright.config.ts) | E2E against `http://localhost:3100` |

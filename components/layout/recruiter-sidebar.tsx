@@ -30,7 +30,7 @@ export function RecruiterSidebar({ orgName }: { orgName?: string }) {
         ) : null}
       </div>
 
-      <nav className="custom-scrollbar mt-md flex-1 overflow-y-auto px-md">
+      <nav className="custom-scrollbar mt-md flex-1 overflow-y-auto px-md" aria-label="Recruiter">
         {NAV_ITEMS.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -42,6 +42,7 @@ export function RecruiterSidebar({ orgName }: { orgName?: string }) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
                 "flex items-center gap-md border-b border-sidebar-border px-4 py-3 font-body-md text-body-md transition-all duration-200",
                 isActive

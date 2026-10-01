@@ -74,6 +74,12 @@ State persists in [`lib/store/wizard-store.ts`](../../lib/store/wizard-store.ts)
 | [`marketing/landing-page-view.tsx`](../../components/marketing/landing-page-view.tsx) | Home content |
 | [`marketing/site-header.tsx`](../../components/marketing/site-header.tsx) | Public nav |
 | [`marketing/site-footer.tsx`](../../components/marketing/site-footer.tsx) | Footer |
+| [`marketing/marketing-article.tsx`](../../components/marketing/marketing-article.tsx) | About / legal article frame |
+| [`seo/json-ld.tsx`](../../components/seo/json-ld.tsx) | JSON-LD script |
+| [`a11y/skip-to-content.tsx`](../../components/a11y/skip-to-content.tsx) | Skip link |
+| [`a11y/route-announcer.tsx`](../../components/a11y/route-announcer.tsx) | Screen-reader route changes |
+| [`perf/web-vitals-reporter.tsx`](../../components/perf/web-vitals-reporter.tsx) | LCP / CLS / INP beacon |
+| [`layout/mobile-nav-sheet.tsx`](../../components/layout/mobile-nav-sheet.tsx) | Mobile drawer nav |
 | [`brand/brand-logo.tsx`](../../components/brand/brand-logo.tsx) | Logo |
 
 ## Admin, recruiter, proctoring, layout
@@ -102,6 +108,7 @@ State persists in [`lib/store/wizard-store.ts`](../../lib/store/wizard-store.ts)
 | [`layout/admin-topbar.tsx`](../../components/layout/admin-topbar.tsx) | Admin header |
 | [`layout/recruiter-sidebar.tsx`](../../components/layout/recruiter-sidebar.tsx) | Recruiter nav |
 | [`layout/recruiter-topbar.tsx`](../../components/layout/recruiter-topbar.tsx) | Recruiter header |
+| [`layout/mobile-nav-sheet.tsx`](../../components/layout/mobile-nav-sheet.tsx) | Mobile drawer nav |
 | [`theme/theme-provider.tsx`](../../components/theme/theme-provider.tsx) | Theme context |
 | [`theme/theme-picker.tsx`](../../components/theme/theme-picker.tsx) | Theme switch |
 

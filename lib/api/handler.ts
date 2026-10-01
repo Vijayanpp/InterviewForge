@@ -28,7 +28,7 @@ export function withApiHandler<TParams = Record<string, string>>(
 ) {
   return async (
     request: NextRequest,
-    routeArgs: { params: Promise<TParams> | TParams }
+    routeArgs: { params: Promise<TParams> }
   ): Promise<NextResponse> => {
     const requestId = request.headers.get("x-request-id") ?? nanoid(12);
     const log = createRequestLogger(requestId, {

@@ -553,6 +553,11 @@
   html {
     @apply font-sans;
   }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
 
 @layer utilities {
@@ -576,5 +581,22 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: var(--border);
     border-radius: 10px;
+  }
+  .skip-to-content {
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    z-index: 100;
+    transform: translateY(-150%);
+    border-radius: 0.5rem;
+    background: var(--foreground);
+    padding: 0.5rem 1rem;
+    color: var(--background);
+    font-weight: 600;
+  }
+  .skip-to-content:focus {
+    transform: translateY(0.75rem);
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
   }
 }

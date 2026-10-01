@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import type { Profile } from "@/types/domain/profile";
 import { ThemePicker } from "@/components/theme/theme-picker";
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { MobileNavSheet } from "@/components/layout/mobile-nav-sheet";
+import { ClipboardList, PlusCircle } from "lucide-react";
 
 function titleFor(pathname: string): string {
   if (pathname.includes("/new")) return "New assessment";
@@ -27,11 +29,18 @@ export function RecruiterTopbar({ profile }: { profile: Profile }) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-lg backdrop-blur-md">
-      <div className="flex items-center lg:hidden">
+      <div className="flex items-center gap-sm lg:hidden">
+        <MobileNavSheet
+          label="Recruiter"
+          items={[
+            { href: "/recruiter/assessments", label: "Assessments", icon: ClipboardList },
+            { href: "/recruiter/assessments/new", label: "New assessment", icon: PlusCircle },
+          ]}
+        />
         <BrandLogo variant="mark" href="/recruiter/assessments" />
       </div>
       <div className="hidden items-center lg:flex">
-        <h2 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h2>
+        <h1 className="font-headline-md text-headline-md font-bold text-foreground">{title}</h1>
       </div>
       <div className="flex items-center gap-md">
         <ThemePicker variant="topbar" />

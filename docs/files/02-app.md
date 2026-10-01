@@ -6,7 +6,15 @@ Next.js App Router. Layouts wrap a route group. `app/api/**/route.ts` is the Bac
 
 | File | Purpose |
 | --- | --- |
-| [`app/layout.tsx`](../../app/layout.tsx) | Root HTML, fonts, theme |
+| [`app/layout.tsx`](../../app/layout.tsx) | Root HTML, fonts, skip link, JSON-LD, web vitals |
+| [`app/robots.ts`](../../app/robots.ts) | Crawl rules + sitemap pointer |
+| [`app/sitemap.ts`](../../app/sitemap.ts) | Public indexable URLs |
+| [`app/manifest.ts`](../../app/manifest.ts) | PWA web app manifest |
+| [`app/opengraph-image.tsx`](../../app/opengraph-image.tsx) | Default OG/Twitter share image |
+| [`app/icon.tsx`](../../app/icon.tsx) / [`app/apple-icon.tsx`](../../app/apple-icon.tsx) | Favicon + Apple touch icon |
+| [`app/llms.txt/route.ts`](../../app/llms.txt/route.ts) | AI-crawler summary |
+| [`app/not-found.tsx`](../../app/not-found.tsx) | 404 |
+| [`app/error.tsx`](../../app/error.tsx) | Route error boundary |
 | [`app/auth/callback/route.ts`](../../app/auth/callback/route.ts) | OAuth code exchange |
 | [`app/auth/confirm/route.ts`](../../app/auth/confirm/route.ts) | Email confirm |
 
@@ -16,6 +24,10 @@ Next.js App Router. Layouts wrap a route group. `app/api/**/route.ts` is the Bac
 | --- | --- |
 | [`(marketing)/layout.tsx`](../../app/(marketing)/layout.tsx) | Public chrome |
 | [`(marketing)/page.tsx`](../../app/(marketing)/page.tsx) | Landing `/` |
+| [`(marketing)/about/page.tsx`](../../app/(marketing)/about/page.tsx) | About |
+| [`(marketing)/contact/page.tsx`](../../app/(marketing)/contact/page.tsx) | Contact |
+| [`(marketing)/privacy/page.tsx`](../../app/(marketing)/privacy/page.tsx) | Privacy |
+| [`(marketing)/terms/page.tsx`](../../app/(marketing)/terms/page.tsx) | Terms |
 | [`(auth)/layout.tsx`](../../app/(auth)/layout.tsx) | Auth pages chrome |
 | [`(auth)/login/page.tsx`](../../app/(auth)/login/page.tsx) | Sign in |
 | [`(auth)/register/page.tsx`](../../app/(auth)/register/page.tsx) | Sign up |
@@ -97,3 +109,4 @@ These handlers authenticate, validate, then call `lib/services`. They do not con
 | [`api/invite/[token]/route.ts`](../../app/api/invite/[token]/route.ts) | Invite metadata / redeem |
 | [`api/proctoring/events/route.ts`](../../app/api/proctoring/events/route.ts) | Proctor events |
 | [`api/proctoring/recordings/route.ts`](../../app/api/proctoring/recordings/route.ts) | Media uploads |
+| [`api/vitals/route.ts`](../../app/api/vitals/route.ts) | Core Web Vitals beacon |

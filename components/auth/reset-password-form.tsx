@@ -39,7 +39,7 @@ export function ResetPasswordForm() {
   return (
     <div className="space-y-xl">
       <div className="space-y-sm text-center lg:text-left">
-        <h2 className="font-headline-lg text-headline-lg text-foreground">Set a new password</h2>
+        <h1 className="font-headline-lg text-headline-lg text-foreground">Set a new password</h1>
         <p className="font-body-md text-body-md text-muted-foreground">
           Choose a strong password you haven&apos;t used before.
         </p>

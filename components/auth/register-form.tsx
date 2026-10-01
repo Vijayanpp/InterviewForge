@@ -54,7 +54,7 @@ export function RegisterForm() {
   if (confirmationSent) {
     return (
       <div className="space-y-md text-center">
-        <h2 className="font-headline-lg text-headline-lg text-foreground">Check your inbox</h2>
+        <h1 className="font-headline-lg text-headline-lg text-foreground">Check your inbox</h1>
         <p className="font-body-md text-body-md text-muted-foreground">
           We&apos;ve sent a confirmation link to your email address. Click it to activate your
           account and start your first interview.
@@ -69,7 +69,7 @@ export function RegisterForm() {
   return (
     <div className="space-y-xl">
       <div className="space-y-sm text-center lg:text-left">
-        <h2 className="font-headline-lg text-headline-lg text-foreground">Create your account</h2>
+        <h1 className="font-headline-lg text-headline-lg text-foreground">Create your account</h1>
         <p className="font-body-md text-body-md text-muted-foreground">
           Start practising realistic, AI-evaluated interviews in minutes.
         </p>

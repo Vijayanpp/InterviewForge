@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BRAND_TAGLINE_COMPACT } from "@/lib/brand";
+import { FAQ_ITEMS } from "@/lib/seo";
 
 /**
  * Marketing landing — stitch `landing_page/code.html` layout.
@@ -26,7 +27,6 @@ import { BRAND_TAGLINE_COMPACT } from "@/lib/brand";
 export function LandingPageView() {
   return (
     <div className="bg-background text-foreground">
-      <main>
         {/* Hero — matches stitch HTML mock card + ai-avatar */}
         <section className="mx-auto mb-xl max-w-container-max px-lg pt-xl lg:px-xl lg:pt-2xl">
           <div className="grid items-center gap-xl lg:grid-cols-2">
@@ -75,7 +75,7 @@ export function LandingPageView() {
                     <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-primary/40">
                       <Image
                         src="/images/landing/ai-avatar.jpg"
-                        alt="AI interviewer avatar"
+                        alt="Maya, the AI interviewer"
                         width={40}
                         height={40}
                         className="h-full w-full object-cover"
@@ -160,7 +160,7 @@ const memoizedCallback = useCallback(() => {
                 { icon: Cloud, label: "AWS" },
               ].map((tech) => (
                 <div key={tech.label} className="flex items-center gap-sm font-semibold">
-                  <tech.icon className="h-5 w-5 text-primary" />
+                  <tech.icon className="h-5 w-5 text-primary" aria-hidden />
                   {tech.label}
                 </div>
               ))}
@@ -186,7 +186,7 @@ const memoizedCallback = useCallback(() => {
                 <div className="mb-md flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                   <SlidersHorizontal className="h-6 w-6 text-primary" />
                 </div>
-                <h4 className="mb-sm font-headline-md text-headline-md">Select Your Path</h4>
+                <h3 className="mb-sm font-headline-md text-headline-md">Select Your Path</h3>
                 <p className="font-body-sm text-body-sm text-muted-foreground">
                   Pick your role, experience level, and the specific technologies you want to be
                   tested on. Choose from Frontend, Backend, AI Engineer, and more.
@@ -209,7 +209,7 @@ const memoizedCallback = useCallback(() => {
                 <div className="mb-md flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                   <MessageSquare className="h-6 w-6 text-primary" />
                 </div>
-                <h4 className="mb-sm font-headline-md text-headline-md">Live AI Simulation</h4>
+                <h3 className="mb-sm font-headline-md text-headline-md">Live AI Simulation</h3>
                 <p className="font-body-sm text-body-sm text-muted-foreground">
                   Experience a realistic conversation with Maya, our AI interviewer. It adapts in
                   real-time based on your answers, digging deeper into your weak spots.
@@ -221,6 +221,7 @@ const memoizedCallback = useCallback(() => {
                   alt="Live AI interview simulation interface"
                   width={800}
                   height={600}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -231,7 +232,7 @@ const memoizedCallback = useCallback(() => {
                 <div className="mb-md flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                   <BarChart3 className="h-6 w-6 text-primary" />
                 </div>
-                <h4 className="mb-sm font-headline-md text-headline-md">Granular Feedback</h4>
+                <h3 className="mb-sm font-headline-md text-headline-md">Granular Feedback</h3>
                 <p className="font-body-sm text-body-sm text-muted-foreground">
                   Don&apos;t just get a score. Get a line-by-line breakdown of how you could improve
                   your logic, code efficiency, and communication style.
@@ -256,7 +257,7 @@ const memoizedCallback = useCallback(() => {
               <div className="mb-md flex h-16 w-16 items-center justify-center rounded-2xl bg-sidebar text-sidebar-foreground">
                 <Trophy className="h-8 w-8" />
               </div>
-              <h4 className="mb-sm font-headline-md text-headline-md">Ready to Hire</h4>
+              <h3 className="mb-sm font-headline-md text-headline-md">Ready to Hire</h3>
               <p className="font-body-sm text-body-sm text-muted-foreground">
                 Export your interview performance report to share with recruiters or use it to
                 target your learning. Confidence, data-backed.
@@ -312,7 +313,7 @@ const memoizedCallback = useCallback(() => {
                   <div className="flex items-center gap-md">
                     <Image
                       src={t.img}
-                      alt={t.name}
+                      alt=""
                       width={40}
                       height={40}
                       className="h-10 w-10 rounded-full object-cover"
@@ -325,6 +326,27 @@ const memoizedCallback = useCallback(() => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="faq" className="mx-auto max-w-container-max px-lg pb-2xl lg:px-xl" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" className="mb-lg text-center font-headline-lg text-headline-lg">
+            Frequently asked questions
+          </h2>
+          <div className="mx-auto max-w-3xl space-y-sm">
+            {FAQ_ITEMS.map((item) => (
+              <details
+                key={item.question}
+                className="rounded-xl border border-border bg-card px-md py-sm"
+              >
+                <summary className="cursor-pointer font-headline-md text-headline-md">
+                  {item.question}
+                </summary>
+                <p className="mt-sm pb-sm font-body-md text-body-md text-muted-foreground">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
           </div>
         </section>
 
@@ -349,7 +371,6 @@ const memoizedCallback = useCallback(() => {
             </div>
           </div>
         </section>
-      </main>
     </div>
   );
 }

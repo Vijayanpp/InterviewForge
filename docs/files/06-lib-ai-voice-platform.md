@@ -34,6 +34,7 @@ Graph interviewer/evaluators still use `AiProvider` for the live question/eval s
 | File | Purpose |
 | --- | --- |
 | [`lib/env.ts`](../../lib/env.ts) | Zod env; `resolveAiProviderName`, `resolveInterviewEngine` |
+| [`lib/seo.ts`](../../lib/seo.ts) | Public metadata, JSON-LD, sitemap paths |
 | [`lib/auth/require-role.ts`](../../lib/auth/require-role.ts) | Session + role gate |
 | [`lib/auth/actions.ts`](../../lib/auth/actions.ts) | Sign in/up, password reset |
 | [`lib/supabase/browser-client.ts`](../../lib/supabase/browser-client.ts) | Browser anon client |
