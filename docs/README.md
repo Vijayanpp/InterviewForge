@@ -2,6 +2,8 @@
 
 Product and engineering docs for the InterviewForge codebase (`interviewforge/`).
 
+**Stack visible on GitHub:** Next.js 16 BFF · **LangChain.js** (`ChatOpenAI.withStructuredOutput`) · **LangGraph.js** interview `StateGraph` · optional **LangSmith** · Supabase (Postgres + RLS).
+
 | Doc | Contents |
 | --- | --- |
 | [Setup](./setup.md) | Prerequisites, local Supabase, hosted push, env vars, Judge0 |

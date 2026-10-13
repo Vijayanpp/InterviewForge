@@ -163,7 +163,7 @@ Full list: [`.env.example`](../.env.example). Validated in [`lib/env.ts`](../lib
 | `VOICE_MAX_ANSWER_SECONDS` | Max recording length |
 | `VOICE_SILENCE_MS` | Optional silence auto-stop in ms. `0` (default) keeps the mic open until pause/stop |
 | `VOICE_MAX_UPLOAD_BYTES` | Max audio upload size |
-| `APP_URL` | Public app origin (local: `http://localhost:3100`). **Required in production** (e.g. Hostinger): `https://plum-squirrel-355450.hostingersite.com` — no trailing slash. Auth routes and proxy redirects use this so Docker never sends users to `https://0.0.0.0:PORT`. |
+| `APP_URL` | Public app origin (local: `http://localhost:3100`). **Required in production**: `https://interviewforge.co.in` — no trailing slash. Auth routes and proxy redirects use this so Docker never sends users to `https://0.0.0.0:PORT`. |
 | `RATE_LIMIT_WINDOW_MS` / `RATE_LIMIT_MAX_REQUESTS` | API rate limits |
 | `LOG_LEVEL` | Pino level |
 
@@ -189,12 +189,16 @@ Uses Next.js `output: "standalone"`. The image sets `HOSTNAME=0.0.0.0` so the pr
 
 ### Hostinger / production checklist
 
-1. Set env `APP_URL=https://plum-squirrel-355450.hostingersite.com` (your real public origin, no trailing slash).
-2. Redeploy after changing auth/proxy code.
-3. Supabase **Authentication → URL Configuration**:
-   - **Site URL**: `https://plum-squirrel-355450.hostingersite.com`
-   - **Redirect URLs** must include: `https://plum-squirrel-355450.hostingersite.com/auth/callback`
-4. Google Cloud authorized redirect URI remains the Supabase callback: `https://<project-ref>.supabase.co/auth/v1/callback` (not the Next.js URL).
+1. Set env `APP_URL=https://interviewforge.co.in` (no trailing slash). Do not leave it blank or set to `http://localhost:3100`.
+2. Also allow `https://www.interviewforge.co.in` if www is connected (redirect www → apex, or list both).
+3. Redeploy after changing auth/proxy code so sitemap, Open Graph, and auth callbacks pick up the new origin.
+4. Supabase **Authentication → URL Configuration**:
+   - **Site URL**: `https://interviewforge.co.in`
+   - **Redirect URLs** must include:
+     - `https://interviewforge.co.in/auth/callback`
+     - `https://interviewforge.co.in/auth/confirm`
+     - `https://www.interviewforge.co.in/auth/callback` (if www is used)
+5. Google Cloud authorized redirect URI remains the Supabase callback: `https://<project-ref>.supabase.co/auth/v1/callback` (not the Next.js URL).
 
 ## Admin access
 

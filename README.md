@@ -2,8 +2,11 @@
 
 The all-in-one AI interview practice platform — adaptive questions, voice & coding rounds, honest rubric scoring, and personalised improvement plans.
 
-[![Live preview](https://img.shields.io/badge/Live_preview-hostingersite.com-8B5CF6?style=flat&logoColor=white)](https://plum-squirrel-355450.hostingersite.com/)
+[![Live](https://img.shields.io/badge/Live-interviewforge.co.in-8B5CF6?style=flat&logoColor=white)](https://interviewforge.co.in/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![LangChain](https://img.shields.io/badge/LangChain.js-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://js.langchain.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph.js-FF4F4F?style=flat&logo=langchain&logoColor=white)](https://docs.langchain.com/oss/javascript/langgraph)
+[![LangSmith](https://img.shields.io/badge/LangSmith-optional-2C6E49?style=flat&logo=langchain&logoColor=white)](https://smith.langchain.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres_+_Auth-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat)](./LICENSE)
 
@@ -12,7 +15,7 @@ The all-in-one AI interview practice platform — adaptive questions, voice & co
 **Docs:** [Setup](./docs/setup.md) · [Architecture](./docs/architecture.md) · [AI / voice / coding](./docs/ai-voice-coding.md) · [Product flows](./docs/product-flows.md) · [Testing](./docs/testing.md)  
 **Support:** [Donate via Razorpay](https://rzp.io/rzp/FnEvT7Ff) · [Contributing](./CONTRIBUTING.md)
 
-InterviewForge simulates a live interview with an AI that asks follow-ups, adapts difficulty, tracks topic coverage, and gives feedback that’s actually useful — not empty praise. Practise across **21+ technology tracks**, choose **text** or **voice**, run **coding challenges**, and leave with a full report plus a 7- and 30-day improvement plan.
+InterviewForge simulates a live interview with an AI that asks follow-ups, adapts difficulty, tracks topic coverage, and gives feedback that’s actually useful — not empty praise. Interviews are orchestrated with **LangGraph.js** and specialist LLM calls go through **LangChain.js** (`ChatOpenAI` + Zod). Practise across **21+ technology tracks**, choose **text** or **voice**, run **coding challenges**, and leave with a full report plus a 7- and 30-day study plan.
 
 ---
 
@@ -95,16 +98,30 @@ Coding-only interviews go straight to the coding room. **Mixed** runs a short te
 
 | Layer | Choice |
 | --- | --- |
-| App | Next.js App Router, TypeScript (strict), Tailwind, shadcn/ui |
+| App / BFF | Next.js 16 App Router, TypeScript (strict), Tailwind, shadcn/ui |
 | Auth & data | Supabase Auth, Postgres (RLS), Storage (resumes, avatars) |
-| AI | Swappable `mock` / `openai` — LangGraph agents, versioned prompts, Zod-validated outputs |
+| Interview orchestration | **LangGraph.js** (`@langchain/langgraph`) — compiled `StateGraph` (`prep` / `ask` / `grade` / `close`) |
+| LLM | **LangChain.js** (`@langchain/openai`) — `ChatOpenAI.withStructuredOutput` + Zod |
+| Observability | **LangSmith** (`langsmith`) — optional traces when `LANGSMITH_TRACING=true` |
+| Retrieval | Query expansion, decomposition, multi-query → pgvector + lexical fallback |
 | Voice | Swappable `mock` / `openai` (Whisper STT + TTS) |
 | Code runs | Swappable `mock` / Judge0 |
 | Tests | Vitest (unit + RLS) · Playwright (e2e) |
 
-**Design rules:** never call the AI provider or service-role key from the client; repositories own queries; services own business logic; every AI structured response is Zod-validated.
+**Design rules:** never call the AI provider or service-role key from the client; the browser never imports `@langchain/*`; repositories own queries; services own business logic; every structured LLM response is Zod-validated.
 
-Real AI / voice need your own `OPENAI_API_KEY`. Mock providers work offline for local demos and CI.
+Real AI / voice need your own `OPENAI_API_KEY`. Mock providers work offline for local demos and CI. Set `INTERVIEW_ENGINE=legacy` only if you need to skip LangGraph.
+
+### LangChain + LangGraph (interview agents)
+
+Default is `INTERVIEW_ENGINE=graph`. Next.js route handlers stay the BFF; they call `interview-engine`, which invokes the compiled graph. Packages on the server:
+
+- [`@langchain/core`](https://www.npmjs.com/package/@langchain/core)
+- [`@langchain/langgraph`](https://www.npmjs.com/package/@langchain/langgraph)
+- [`@langchain/openai`](https://www.npmjs.com/package/@langchain/openai)
+- [`langsmith`](https://www.npmjs.com/package/langsmith) (optional)
+
+Specialists: planner, interviewer, technical / behavioural / coding evaluators, evidence validator, supervisor, report synthesizer. Details: [docs/architecture.md](./docs/architecture.md) · [docs/ai-voice-coding.md](./docs/ai-voice-coding.md).
 
 ---
 
@@ -141,12 +158,18 @@ Default in `.env.example` is `AI_PROVIDER=mock` (no OpenAI key). For real interv
 AI_PROVIDER=openai
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4o-mini
+INTERVIEW_ENGINE=graph
 
 VOICE_PROVIDER=openai
 VOICE_TTS_VOICE=nova
 
 CODE_EXECUTION_PROVIDER=judge0
 JUDGE0_URL=https://ce.judge0.com
+
+# Optional LangSmith traces for LangChain / LangGraph
+# LANGSMITH_TRACING=true
+# LANGSMITH_API_KEY=lsv2_...
+# LANGSMITH_PROJECT=interviewforge
 ```
 
 Full env list, hosted Supabase, and **Google OAuth** (“Continue with Google”): [docs/setup.md](./docs/setup.md).
@@ -170,10 +193,11 @@ Full env list, hosted Supabase, and **Google OAuth** (“Continue with Google”
 
 ## Architecture (short)
 
-Next.js is the BFF. Live interviews run a LangGraph graph (plan → retrieve → interview → evaluate → supervise → report). Resume/JD and the question bank are retrieved with expansion, decomposition, and multi-query — not stuffed whole into one prompt.
+Next.js is the BFF. Live interviews run a **LangGraph** `StateGraph` (plan → retrieve → interview → evaluate → supervise → report). Each specialist call uses **LangChain** `ChatOpenAI.withStructuredOutput`. Resume/JD and the question bank are retrieved with expansion, decomposition, and multi-query — not stuffed whole into one prompt.
 
 ```
-UI rooms  →  /api/interviews/*  →  interview-engine  →  LangGraph  →  Supabase
+UI rooms  →  /api/interviews/*  →  interview-engine  →  LangGraph + LangChain  →  Supabase
+                                                              ↘ LangSmith (optional)
 ```
 
 See **[docs/architecture.md](./docs/architecture.md)** for the current architecture, **[docs/folder-structure.md](./docs/folder-structure.md)** for the tree, and **[docs/files/README.md](./docs/files/README.md)** for a file-by-file catalog.
@@ -194,7 +218,7 @@ Promote to admin via `profiles.role_id` → `roles` row `admin`.
 
 ## Project status
 
-InterviewForge is **usable end-to-end** for candidate practice (text, voice, coding) with mock or OpenAI backends. Recruiter org UI and paid billing metering are schema-ready but deferred. Self-host for free; use the [demo](https://plum-squirrel-355450.hostingersite.com/) to try without setup.
+InterviewForge is **usable end-to-end** for candidate practice (text, voice, coding) with mock or OpenAI backends. Recruiter org UI and paid billing metering are schema-ready but deferred. Self-host for free; use the [live site](https://interviewforge.co.in/) to try without setup.
 
 Contributions and feedback are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 

@@ -14,8 +14,29 @@ export const SITE_KEYWORDS = [
   "coding assessment platform",
 ];
 
+/** Canonical production origin. Used when `APP_URL` is missing or still localhost in a production build. */
+export const PRODUCTION_SITE_URL = "https://interviewforge.co.in";
+
+const LOCAL_SITE_URL = "http://localhost:3100";
+
 export function getSiteUrl(): string {
-  return (process.env.APP_URL ?? "http://localhost:3100").replace(/\/$/, "");
+  const fallback =
+    process.env.NODE_ENV === "production" ? PRODUCTION_SITE_URL : LOCAL_SITE_URL;
+  const raw = process.env.APP_URL?.trim().replace(/\/$/, "") ?? "";
+  if (!raw) return fallback;
+  try {
+    const origin = new URL(raw).origin;
+    const host = new URL(origin).hostname;
+    if (
+      process.env.NODE_ENV === "production" &&
+      (host === "localhost" || host === "127.0.0.1")
+    ) {
+      return PRODUCTION_SITE_URL;
+    }
+    return origin;
+  } catch {
+    return fallback;
+  }
 }
 
 export function absoluteUrl(path = "/"): string {

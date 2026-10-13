@@ -2,6 +2,8 @@
 
 One page per area. Each source file is listed with its job.
 
+Interview runtime lives under `lib/agents/`, `lib/graph/`, and `lib/retrieval/` — **LangChain.js**, **LangGraph.js**, and optional **LangSmith**. The browser never imports those packages.
+
 | Page | Covers |
 | --- | --- |
 | [Folder structure](../folder-structure.md) | Tree and layering rules |

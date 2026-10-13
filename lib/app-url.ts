@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { PRODUCTION_SITE_URL } from "@/lib/seo";
 
 /**
  * Public site origin for redirects after auth.
@@ -32,7 +33,9 @@ export function getPublicAppOrigin(
   if (fromHeaders) return fromHeaders;
   if (fromRequest) return fromRequest;
 
-  return "http://localhost:3100";
+  return process.env.NODE_ENV === "production"
+    ? PRODUCTION_SITE_URL
+    : "http://localhost:3100";
 }
 
 /** Convenience: resolve origin from a NextRequest (headers + nextUrl). */

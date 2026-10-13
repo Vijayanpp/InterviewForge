@@ -43,19 +43,57 @@ Rollback: set `INTERVIEW_ENGINE=legacy` to use the pre-graph single-provider eng
 
 ```mermaid
 flowchart TB
-  UI[Room Voice Coding UI]
-  BFF[Next.js BFF route handlers]
-  Engine[interview-engine adapter]
-  Graph[LangGraph prep ask grade close]
-  Retrieval[expand decompose multi-query]
-  Stores[pgvector question bank session context]
-  DB[(Supabase sessions evals reports events)]
+  subgraph clients [Browser — view only]
+    Wizard[Interview wizard]
+    Rooms[Text / voice / coding rooms]
+    Admin[Admin / recruiter consoles]
+  end
 
-  UI --> BFF --> Engine
+  subgraph bff [Next.js 16 BFF]
+    Proxy[proxy.ts session + RBAC]
+    Routes["/api/interviews start · answer · end"]
+    VoiceAPI[STT / TTS routes]
+    CodeAPI[coding run / submit]
+    Engine[interview-engine adapter]
+  end
+
+  subgraph runtime [Server-only agent runtime]
+    Graph[LangGraph prep / ask / grade / close]
+    Agents[Planner · interviewer · evaluators · supervisor · synthesizer]
+    Retrieval[Expand → decompose → multi-query]
+    LLM[ChatOpenAI + Zod]
+  end
+
+  subgraph data [System of record]
+    Repos[Repositories]
+    DB[(Supabase Postgres + RLS)]
+    Vec[pgvector knowledge_chunks]
+  end
+
+  subgraph side [Beside the graph]
+    Voice[OpenAI Whisper / TTS or mock]
+    Judge0[Judge0 or mock]
+    Proctor[Proctoring events]
+    Smith[LangSmith traces]
+  end
+
+  Wizard --> Proxy
+  Rooms --> Proxy
+  Admin --> Proxy
+  Proxy --> Routes
+  Rooms --> VoiceAPI
+  Rooms --> CodeAPI
+  Routes --> Engine
   Engine --> Graph
-  Graph --> Retrieval --> Stores
-  Engine --> DB
-  Graph --> Engine
+  Graph --> Agents
+  Agents --> LLM
+  Graph --> Retrieval
+  Retrieval --> Vec
+  Engine --> Repos --> DB
+  VoiceAPI --> Voice
+  CodeAPI --> Judge0
+  LLM -.-> Smith
+  Rooms -.-> Proctor
 ```
 
 Three rules hold everywhere:
