@@ -45,8 +45,8 @@ export default async function DashboardPage() {
             {data.hasAnySessions ? "Ready for your next interview?" : "Let's get your first interview started."}
           </p>
         </div>
-        <div className="flex gap-md">
-          <Button size="lg" nativeButton={false} render={<Link href="/interviews/new" />}>
+        <div className="flex flex-wrap gap-md">
+          <Button size="lg" className="w-full sm:w-auto" nativeButton={false} render={<Link href="/interviews/new" />}>
             <Plus className="h-5 w-5" />
             Start New Interview
           </Button>

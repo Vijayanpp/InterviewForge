@@ -36,7 +36,7 @@ export function LandingPageView() {
                   {BRAND_TAGLINE_COMPACT}
                 </span>
               </div>
-              <h1 className="font-headline-xl text-headline-xl tracking-tight lg:text-[64px] lg:leading-[72px]">
+              <h1 className="text-[2rem] leading-tight font-headline-xl tracking-tight sm:text-headline-xl lg:text-[64px] lg:leading-[72px]">
                 Practise Today. Perform Better in Your{" "}
                 <span className="brand-gradient-text">Real Interview.</span>
               </h1>
@@ -227,8 +227,8 @@ const memoizedCallback = useCallback(() => {
               </div>
             </div>
 
-            <div className="relative flex items-center rounded-2xl border border-border bg-card/80 p-lg backdrop-blur-md transition-colors hover:border-primary/40 md:col-span-2">
-              <div className="w-1/2 pr-md">
+            <div className="relative flex flex-col items-stretch gap-md rounded-2xl border border-border bg-card/80 p-lg backdrop-blur-md transition-colors hover:border-primary/40 sm:flex-row sm:items-center md:col-span-2">
+              <div className="sm:w-1/2 sm:pr-md">
                 <div className="mb-md flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                   <BarChart3 className="h-6 w-6 text-primary" />
                 </div>
@@ -238,7 +238,7 @@ const memoizedCallback = useCallback(() => {
                   your logic, code efficiency, and communication style.
                 </p>
               </div>
-              <div className="flex w-1/2 justify-end">
+              <div className="flex justify-end sm:w-1/2">
                 <div className="w-full max-w-[200px] space-y-sm">
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div className="h-full w-[85%] bg-primary" />
@@ -351,7 +351,7 @@ const memoizedCallback = useCallback(() => {
         </section>
 
         <section className="mx-auto max-w-container-max px-lg py-2xl lg:px-xl">
-          <div className="relative flex flex-col items-center justify-between gap-xl overflow-hidden rounded-3xl bg-sidebar p-xl text-sidebar-foreground lg:flex-row">
+          <div className="relative flex flex-col items-center justify-between gap-lg overflow-hidden rounded-3xl bg-sidebar p-lg text-sidebar-foreground sm:p-xl lg:flex-row lg:gap-xl">
             <div className="relative z-10 text-center lg:text-left">
               <h2 className="mb-md font-headline-lg text-headline-lg text-white">
                 Ready to forge your future?
@@ -361,10 +361,11 @@ const memoizedCallback = useCallback(() => {
                 practicing with Maya today.
               </p>
             </div>
-            <div className="relative z-10">
+            <div className="relative z-10 w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="gradient"
+                className="w-full sm:w-auto"
                 nativeButton={false}
                 render={<Link href="/register">Start Your First Interview</Link>}
               />

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Play, Send } from "lucide-react";
+import { BookOpen, Code2, Loader2, Play, Send } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { CodeEditor, LanguageSelect } from "@/components/coding/code-editor";
 import { TestResultsPanel } from "@/components/coding/test-results-panel";
 import { isCodingLanguage, type CodingLanguage } from "@/lib/code-execution/languages";
+import { cn } from "@/lib/utils";
 import { DIFFICULTY_LEVEL_LABELS } from "@/types/domain/enums";
 import type {
   CandidateFacingChallenge,
@@ -26,6 +27,64 @@ function pickInitialLanguage(challenge: CandidateFacingChallenge): CodingLanguag
 
 function starterFor(challenge: CandidateFacingChallenge, language: CodingLanguage): string {
   return challenge.starterCode[language] ?? `// Write your ${language} solution here\n`;
+}
+
+function ProblemDetails({
+  challenge,
+  footer,
+}: {
+  challenge: CandidateFacingChallenge;
+  footer?: ReactNode;
+}) {
+  return (
+    <div className="custom-scrollbar h-full overflow-y-auto overflow-x-hidden bg-card p-md sm:p-lg">
+      <div className="mb-md flex flex-wrap items-center gap-sm">
+        <h1 className="font-headline-md text-lg leading-snug text-foreground sm:text-headline-md">
+          {challenge.title}
+        </h1>
+        <Badge variant="outline" className="capitalize">
+          {DIFFICULTY_LEVEL_LABELS[challenge.difficulty]}
+        </Badge>
+      </div>
+      <div className="prose prose-sm max-w-none break-words text-foreground dark:prose-invert">
+        <ReactMarkdown>{challenge.problemStatement}</ReactMarkdown>
+      </div>
+
+      {challenge.examples.length > 0 && (
+        <div className="mt-lg space-y-md">
+          <h2 className="font-label-md text-label-md uppercase text-muted-foreground">Examples</h2>
+          {challenge.examples.map((ex, i) => (
+            <div key={i} className="rounded-lg border border-border bg-muted/30 p-md text-body-sm">
+              <p className="break-all">
+                <span className="font-semibold">Input:</span>{" "}
+                <code className="text-xs">{ex.input}</code>
+              </p>
+              <p className="mt-1 break-all">
+                <span className="font-semibold">Output:</span>{" "}
+                <code className="text-xs">{ex.output}</code>
+              </p>
+              {ex.explanation && (
+                <p className="mt-1 text-muted-foreground">{ex.explanation}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {challenge.constraints && (
+        <div className="mt-lg">
+          <h2 className="mb-sm font-label-md text-label-md uppercase text-muted-foreground">
+            Constraints
+          </h2>
+          <pre className="whitespace-pre-wrap break-words rounded-lg bg-muted/30 p-md text-body-sm">
+            {challenge.constraints}
+          </pre>
+        </div>
+      )}
+
+      {footer}
+    </div>
+  );
 }
 
 export function CodingRoom({
@@ -61,6 +120,7 @@ export function CodingRoom({
   const [totalCount, setTotalCount] = useState(challenge.visibleTestCount);
   const [score, setScore] = useState<number | undefined>();
   const [mode, setMode] = useState<"run" | "submit">("run");
+  const [mobileTab, setMobileTab] = useState<"problem" | "code">("code");
 
   function handleLanguageChange(next: CodingLanguage) {
     setLanguage(next);
@@ -68,6 +128,7 @@ export function CodingRoom({
   }
 
   async function handleRun() {
+    setMobileTab("code");
     setIsRunning(true);
     setMode("run");
     setScore(undefined);
@@ -96,6 +157,7 @@ export function CodingRoom({
   }
 
   async function handleSubmit() {
+    setMobileTab("code");
     setIsSubmitting(true);
     setMode("submit");
     try {
@@ -130,91 +192,122 @@ export function CodingRoom({
     }
   }
 
-  return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col lg:flex-row">
-      {/* Problem panel */}
-      <aside className="custom-scrollbar w-full overflow-y-auto border-b border-border bg-card p-lg lg:w-[40%] lg:border-b-0 lg:border-r">
-        <div className="mb-md flex flex-wrap items-center gap-sm">
-          <h1 className="font-headline-md text-headline-md text-foreground">{challenge.title}</h1>
-          <Badge variant="outline" className="capitalize">
-            {DIFFICULTY_LEVEL_LABELS[challenge.difficulty]}
-          </Badge>
-        </div>
-        <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
-          <ReactMarkdown>{challenge.problemStatement}</ReactMarkdown>
-        </div>
+  const toolbar = (
+    <div className="flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-sm border-b border-white/5 px-md py-sm">
+      <LanguageSelect
+        languages={languages.length ? languages : ["javascript"]}
+        value={language}
+        onChange={handleLanguageChange}
+      />
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-sm sm:flex-initial">
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => void handleRun()}
+          disabled={isRunning || isSubmitting}
+          className="flex-1 sm:flex-initial"
+        >
+          {isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+          Run
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => void handleSubmit()}
+          disabled={isRunning || isSubmitting}
+          className="flex-1 sm:flex-initial"
+        >
+          {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          Submit
+        </Button>
+      </div>
+    </div>
+  );
 
-        {challenge.examples.length > 0 && (
-          <div className="mt-lg space-y-md">
-            <h2 className="font-label-md text-label-md uppercase text-muted-foreground">Examples</h2>
-            {challenge.examples.map((ex, i) => (
-              <div key={i} className="rounded-lg border border-border bg-muted/30 p-md text-body-sm">
-                <p>
-                  <span className="font-semibold">Input:</span>{" "}
-                  <code className="text-xs">{ex.input}</code>
-                </p>
-                <p className="mt-1">
-                  <span className="font-semibold">Output:</span>{" "}
-                  <code className="text-xs">{ex.output}</code>
-                </p>
-                {ex.explanation && (
-                  <p className="mt-1 text-muted-foreground">{ex.explanation}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {challenge.constraints && (
-          <div className="mt-lg">
-            <h2 className="mb-sm font-label-md text-label-md uppercase text-muted-foreground">
-              Constraints
-            </h2>
-            <pre className="whitespace-pre-wrap rounded-lg bg-muted/30 p-md text-body-sm">
-              {challenge.constraints}
-            </pre>
-          </div>
-        )}
-
-        {!sessionId && (
-          <Button variant="ghost" className="mt-lg" onClick={() => router.push("/practice")}>
-            ← Back to challenges
-          </Button>
-        )}
-      </aside>
-
-      {/* Editor + results */}
-      <section className="flex min-h-0 flex-1 flex-col bg-[#1e1e1e]">
-        <div className="flex h-12 items-center justify-between border-b border-white/5 px-md">
-          <LanguageSelect languages={languages.length ? languages : ["javascript"]} value={language} onChange={handleLanguageChange} />
-          <div className="flex items-center gap-sm">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={handleRun}
-              disabled={isRunning || isSubmitting}
-            >
-              {isRunning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-              Run
-            </Button>
-            <Button size="sm" onClick={handleSubmit} disabled={isRunning || isSubmitting}>
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              Submit
-            </Button>
-          </div>
-        </div>
-        <div className="min-h-0 flex-1">
+  const editorStack = (
+    <div className="flex min-h-0 flex-1 flex-col bg-[#1e1e1e]">
+      {toolbar}
+      <div className="relative min-h-[14rem] flex-1">
+        <div className="absolute inset-0">
           <CodeEditor language={language} value={source} onChange={setSource} />
         </div>
-        <div className="max-h-[40%] overflow-y-auto border-t border-white/5 bg-card">
-          <TestResultsPanel
-            results={results}
-            passedCount={passedCount}
-            totalCount={totalCount}
-            score={score}
-            mode={mode}
-          />
+      </div>
+      <div className="max-h-40 shrink-0 overflow-y-auto border-t border-white/5 bg-card sm:max-h-[40%]">
+        <TestResultsPanel
+          results={results}
+          passedCount={passedCount}
+          totalCount={totalCount}
+          score={score}
+          mode={mode}
+        />
+      </div>
+    </div>
+  );
+
+  const backButton = !sessionId ? (
+    <Button variant="ghost" className="mt-lg" onClick={() => router.push("/practice")}>
+      ← Back to challenges
+    </Button>
+  ) : null;
+
+  return (
+    <div className="flex h-full min-h-0 min-w-0 flex-col lg:flex-row">
+      <div className="flex shrink-0 border-b border-border bg-card p-sm lg:hidden">
+        <div className="grid w-full grid-cols-2 gap-sm rounded-lg bg-muted p-[3px]">
+          <button
+            type="button"
+            onClick={() => setMobileTab("problem")}
+            className={cn(
+              "inline-flex items-center justify-center gap-sm rounded-md px-md py-sm text-sm font-medium",
+              mobileTab === "problem" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+            )}
+          >
+            <BookOpen className="size-4" aria-hidden />
+            Problem
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("code")}
+            className={cn(
+              "inline-flex items-center justify-center gap-sm rounded-md px-md py-sm text-sm font-medium",
+              mobileTab === "code" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+            )}
+          >
+            <Code2 className="size-4" aria-hidden />
+            Editor
+          </button>
         </div>
+      </div>
+
+      <aside
+        className={cn(
+          "min-h-0 min-w-0 lg:flex lg:w-[40%] lg:border-r lg:border-border",
+          mobileTab === "problem" ? "flex flex-1 flex-col" : "hidden lg:flex"
+        )}
+      >
+        <ProblemDetails
+          challenge={challenge}
+          footer={
+            <>
+              {backButton}
+              <Button
+                className="mt-md w-full lg:hidden"
+                onClick={() => setMobileTab("code")}
+              >
+                <Code2 className="h-4 w-4" />
+                Write solution
+              </Button>
+            </>
+          }
+        />
+      </aside>
+
+      <section
+        className={cn(
+          "min-h-0 min-w-0 flex-1 flex-col",
+          mobileTab === "code" ? "flex" : "hidden lg:flex"
+        )}
+      >
+        {editorStack}
       </section>
     </div>
   );

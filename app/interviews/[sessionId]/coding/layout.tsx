@@ -11,12 +11,12 @@ export default async function InterviewCodingLayout({ children }: { children: Re
   if (!ctx) redirect("/login");
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
-      <header className="flex h-16 shrink-0 items-center gap-sm border-b border-border bg-background/80 px-lg backdrop-blur-md">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-background">
+      <header className="flex h-16 shrink-0 items-center gap-sm border-b border-border bg-background/80 px-md backdrop-blur-md sm:px-lg">
         <BrandLogo variant="mark" href="/dashboard" />
-        <span className="ml-md text-body-sm text-muted-foreground">Coding round</span>
+        <span className="ml-md truncate text-body-sm text-muted-foreground">Coding round</span>
       </header>
-      <main id="main-content" className="relative min-h-0 flex-1 overflow-hidden" tabIndex={-1}>{children}</main>
+      <main id="main-content" className="relative min-h-0 min-w-0 flex-1 overflow-hidden" tabIndex={-1}>{children}</main>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default async function CandidateLayout({ children }: { children: React.Re
       <CandidateSidebar isAdmin={ctx.role === "admin"} />
       <main id="main-content" className="flex min-h-screen flex-col lg:ml-[280px]" tabIndex={-1}>
         <CandidateTopbar profile={ctx.profile} />
-        <div className="mx-auto w-full max-w-[1440px] flex-1 space-y-lg p-lg lg:p-xl">{children}</div>
+        <div className="mx-auto w-full min-w-0 max-w-[1440px] flex-1 space-y-lg p-md sm:p-lg lg:p-xl">{children}</div>
       </main>
     </div>
   );

@@ -46,7 +46,7 @@ export function CandidateTopbar({ profile }: { profile: Profile }) {
   const title = titleFor(pathname);
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-lg backdrop-blur-md">
+    <header className="sticky top-0 z-40 flex h-16 w-full min-w-0 items-center justify-between border-b border-border bg-background/80 px-md backdrop-blur-md sm:px-lg">
       <div className="flex items-center gap-sm lg:hidden">
         <MobileNavSheet
           label="Candidate"

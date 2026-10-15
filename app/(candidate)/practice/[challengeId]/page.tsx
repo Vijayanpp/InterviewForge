@@ -31,7 +31,7 @@ export default async function PracticeChallengePage({
   const initialLanguage = lang && isCodingLanguage(lang) ? lang : undefined;
 
   return (
-    <div className="-m-lg -mb-0 lg:-m-xl">
+    <div className="-mx-md -mb-md -mt-md flex h-[calc(100dvh-4rem)] min-h-0 min-w-0 flex-col overflow-hidden sm:-mx-lg sm:-mb-lg sm:-mt-lg lg:-mx-xl lg:-mb-xl lg:-mt-xl">
       <CodingRoom
         challenge={toCandidateFacingChallenge(challenge, visibleTestCount)}
         initialLanguage={initialLanguage}

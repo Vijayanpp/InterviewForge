@@ -166,7 +166,7 @@ export function AiChallengeGenerator() {
         </p>
       </div>
 
-      <Button onClick={handleGenerate} disabled={isGenerating || languages.length === 0}>
+      <Button className="w-full sm:w-auto" onClick={handleGenerate} disabled={isGenerating || languages.length === 0}>
         {isGenerating ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
@@ -193,7 +193,7 @@ export function AiChallengeGenerator() {
                 value={selectedLanguage}
                 onValueChange={(v) => setSelectedLanguage((v as CodingLanguage) ?? "javascript")}
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

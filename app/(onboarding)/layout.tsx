@@ -21,12 +21,12 @@ export default async function OnboardingLayout({ children }: { children: React.R
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="flex h-16 items-center border-b border-border px-lg">
+      <header className="flex h-16 items-center border-b border-border px-md sm:px-lg">
         <BrandLogo variant="mark" href="/" />
       </header>
       <main
         id="main-content"
-        className="flex min-h-[calc(100vh-64px)] items-center justify-center px-lg py-2xl"
+        className="flex min-h-[calc(100dvh-64px)] items-center justify-center px-md py-xl sm:px-lg sm:py-2xl"
         tabIndex={-1}
       >
         {children}

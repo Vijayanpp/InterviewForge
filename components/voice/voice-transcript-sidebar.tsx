@@ -23,7 +23,7 @@ export function VoiceTranscriptSidebar({
   draftEditable: boolean;
 }) {
   return (
-    <aside className="flex w-full flex-col gap-md md:w-80">
+    <aside className="flex h-full min-h-0 w-full flex-col gap-md md:w-80">
       <div className="flex items-center justify-between px-md">
         <h3 className="flex items-center gap-xs font-label-md text-label-md text-muted-foreground">
           <NotebookText className="size-[18px]" aria-hidden />

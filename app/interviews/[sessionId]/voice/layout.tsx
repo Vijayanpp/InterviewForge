@@ -11,7 +11,7 @@ export default async function InterviewVoiceLayout({ children }: { children: Rea
   if (!ctx) redirect("/login");
 
   return (
-    <div id="main-content" className="flex h-screen flex-col overflow-hidden bg-background" tabIndex={-1}>
+    <div id="main-content" className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-background" tabIndex={-1}>
       {children}
     </div>
   );

@@ -11,11 +11,11 @@ export default async function InterviewRoomLayout({ children }: { children: Reac
   if (!ctx) redirect("/login");
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
-      <header className="flex h-16 items-center gap-sm border-b border-border bg-background/80 px-lg backdrop-blur-md">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-background">
+      <header className="flex h-16 shrink-0 items-center gap-sm border-b border-border bg-background/80 px-md backdrop-blur-md sm:px-lg">
         <BrandLogo variant="mark" href="/dashboard" />
       </header>
-      <main id="main-content" className="relative flex flex-1 overflow-hidden" tabIndex={-1}>{children}</main>
+      <main id="main-content" className="relative flex min-h-0 min-w-0 flex-1 overflow-hidden" tabIndex={-1}>{children}</main>
     </div>
   );
 }

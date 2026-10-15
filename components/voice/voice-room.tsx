@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Timer } from "lucide-react";
+import { Loader2, NotebookText, Timer } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -17,6 +17,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { BrandLogo } from "@/components/brand/brand-logo";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { VoiceAvatar } from "@/components/voice/voice-avatar";
 import { VoiceControls } from "@/components/voice/voice-controls";
 import { ThemePicker } from "@/components/theme/theme-picker";
@@ -437,21 +446,45 @@ export function VoiceRoom({
   const busy = isSubmitting || isTranscribing || isEnding;
 
   return (
-    <div className="relative flex h-[calc(100vh-0px)] flex-col overflow-hidden bg-background text-foreground">
-      <header className="z-40 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-lg backdrop-blur-md">
-        <div className="flex items-center gap-md">
+    <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
+      <header className="z-40 flex min-h-16 w-full flex-wrap items-center justify-between gap-sm border-b border-border bg-background/80 px-md py-sm backdrop-blur-md sm:px-lg">
+        <div className="flex min-w-0 items-center gap-sm sm:gap-md">
           <BrandLogo variant="mark" href="/dashboard" />
-          <div>
-            <h1 className="font-headline-md text-headline-md leading-none text-foreground">
+          <div className="min-w-0">
+            <h1 className="truncate font-headline-md text-base leading-none text-foreground sm:text-headline-md">
               {INTERVIEW_TYPE_LABELS[interviewType]} Interview
             </h1>
-            <p className="font-label-md text-label-md text-muted-foreground">{focusLine}</p>
+            <p className="hidden truncate font-label-md text-label-md text-muted-foreground sm:block">
+              {focusLine}
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-lg">
+        <div className="flex flex-wrap items-center justify-end gap-sm sm:gap-md">
+          <Sheet>
+            <SheetTrigger
+              render={
+                <Button type="button" variant="outline" size="sm" className="md:hidden" aria-label="Open transcript">
+                  <NotebookText className="size-4" aria-hidden />
+                  Transcript
+                </Button>
+              }
+            />
+            <SheetContent side="right" className="w-[min(100%,22rem)] bg-background p-md">
+              <SheetHeader>
+                <SheetTitle>Live transcript</SheetTitle>
+                <SheetDescription className="sr-only">Spoken answers for this question</SheetDescription>
+              </SheetHeader>
+              <VoiceTranscriptSidebar
+                entries={entries}
+                draftText={draftText}
+                onDraftChange={setDraftText}
+                draftEditable={!busy}
+              />
+            </SheetContent>
+          </Sheet>
           <ThemePicker variant="topbar" />
-          <div className="flex items-center gap-sm rounded-lg border border-border bg-muted/50 px-md py-sm">
-            <Timer className="size-5 text-primary" aria-hidden />
+          <div className="flex items-center gap-sm rounded-lg border border-border bg-muted/50 px-sm py-sm sm:px-md">
+            <Timer className="size-4 text-primary sm:size-5" aria-hidden />
             <span className="font-label-md text-label-md tabular-nums">{formatElapsed(elapsed)}</span>
           </div>
             <AlertDialog>
@@ -460,10 +493,11 @@ export function VoiceRoom({
                   <button
                     type="button"
                     disabled={isEnding}
-                    className="inline-flex items-center gap-sm rounded-lg bg-destructive px-lg py-sm font-label-md text-label-md text-destructive-foreground shadow-sm transition-all hover:bg-destructive/90 active:scale-95 disabled:opacity-50"
+                    className="inline-flex items-center gap-sm rounded-lg bg-destructive px-md py-sm font-label-md text-label-md text-destructive-foreground shadow-sm transition-all hover:bg-destructive/90 active:scale-95 disabled:opacity-50 sm:px-lg"
                   >
                     {isEnding && <Loader2 className="size-4 animate-spin" aria-hidden />}
-                    End Interview
+                    <span className="hidden sm:inline">End Interview</span>
+                    <span className="sm:hidden">End</span>
                   </button>
                 }
               />
@@ -510,8 +544,8 @@ export function VoiceRoom({
         </div>
       )}
 
-      <main className="relative flex min-h-0 flex-1 flex-col gap-lg overflow-hidden px-lg pt-lg md:flex-row md:pb-lg">
-        <div className="flex min-h-0 flex-1 flex-col items-center gap-md overflow-hidden">
+      <main className="relative flex min-h-0 flex-1 flex-col gap-md overflow-hidden px-md pt-md sm:gap-lg sm:px-lg sm:pt-lg md:flex-row md:pb-lg">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col items-center gap-md overflow-hidden">
           {/* Avatar pinned — never scrolls away when the question is long */}
           <div className="flex w-full max-w-2xl shrink-0 flex-col items-center">
             <VoiceAvatar
@@ -524,13 +558,17 @@ export function VoiceRoom({
             <VoiceQuestionCard questionBody={question.body} uiState={uiState} />
           </div>
         </div>
-        <VoiceTranscriptSidebar
-          entries={entries}
-          draftText={draftText}
-          onDraftChange={setDraftText}
-          draftEditable={!busy}
-        />
-        <VoiceStatusPills uiState={uiState} />
+        <div className="hidden min-h-0 md:flex">
+          <VoiceTranscriptSidebar
+            entries={entries}
+            draftText={draftText}
+            onDraftChange={setDraftText}
+            draftEditable={!busy}
+          />
+        </div>
+        <div className="hidden md:block">
+          <VoiceStatusPills uiState={uiState} />
+        </div>
       </main>
 
       <VoiceControls

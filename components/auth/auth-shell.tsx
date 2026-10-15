@@ -8,7 +8,7 @@ const STATS = [
 
 export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
-    <main id="main-content" className="flex h-screen w-full overflow-hidden" tabIndex={-1}>
+    <main id="main-content" className="flex h-dvh max-h-dvh w-full overflow-hidden" tabIndex={-1}>
       <section className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-sidebar-gradient p-xl lg:flex">
         <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_oklab,var(--sidebar-primary)_28%,transparent),transparent_60%)]" />
 

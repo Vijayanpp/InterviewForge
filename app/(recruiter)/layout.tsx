@@ -33,7 +33,7 @@ export default async function RecruiterLayout({ children }: { children: React.Re
       <RecruiterSidebar orgName={membership?.organization.name} />
       <main id="main-content" className="flex min-h-screen flex-col lg:ml-[280px]" tabIndex={-1}>
         <RecruiterTopbar profile={ctx.profile} />
-        <div className="mx-auto w-full max-w-[1440px] flex-1 space-y-lg p-lg lg:p-xl">{children}</div>
+        <div className="mx-auto w-full min-w-0 max-w-[1440px] flex-1 space-y-lg p-md sm:p-lg lg:p-xl">{children}</div>
       </main>
     </div>
   );

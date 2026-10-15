@@ -18,7 +18,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-container-max items-center justify-between px-lg lg:px-xl">
         <Link
           href="/"
-          className="brand-gradient-text font-headline-md text-headline-md font-bold"
+          className="brand-gradient-text truncate font-headline-md text-base font-bold sm:text-headline-md"
         >
           {BRAND_NAME}
         </Link>
@@ -35,7 +35,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-sm">
+        <div className="flex min-w-0 items-center gap-xs sm:gap-sm">
           <MobileNavSheet label="Site" items={NAV_LINKS} triggerClassName="md:hidden" />
           <ThemePicker variant="topbar" />
           <Button
@@ -46,8 +46,14 @@ export function SiteHeader() {
           />
           <Button
             variant="gradient"
+            className="px-md sm:px-lg"
             nativeButton={false}
-            render={<Link href="/register">Start Free Interview</Link>}
+            render={
+              <Link href="/register">
+                <span className="sm:hidden">Start</span>
+                <span className="hidden sm:inline">Start Free Interview</span>
+              </Link>
+            }
           />
         </div>
       </div>

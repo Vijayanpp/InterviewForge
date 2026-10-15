@@ -151,22 +151,23 @@ export function InterviewRoom({
   }
 
   return (
-    <div className="flex flex-1 overflow-hidden">
+    <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
       <TopicRail technologyNames={technologyNames} topicNames={topicNames} questionsAsked={questionsAsked} />
 
-      <section className="flex flex-1 flex-col overflow-y-auto px-lg">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between py-md">
+      <section className="flex min-w-0 flex-1 flex-col overflow-y-auto px-md sm:px-lg">
+        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-sm py-md">
           <span className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
             {INTERVIEW_TYPE_LABELS[interviewType]} Interview
           </span>
-          <div className="flex items-center gap-md">
+          <div className="flex items-center gap-sm sm:gap-md">
             <SessionTimer durationMinutes={durationMinutes} startedAt={startedAt} onExpire={handleEnd} />
             <AlertDialog>
               <AlertDialogTrigger
                 render={
                   <Button variant="outline" size="sm" disabled={isEnding}>
                     <LogOut className="h-4 w-4" />
-                    End Interview
+                    <span className="hidden sm:inline">End Interview</span>
+                    <span className="sm:hidden">End</span>
                   </Button>
                 }
               />
@@ -188,6 +189,20 @@ export function InterviewRoom({
               </AlertDialogContent>
             </AlertDialog>
           </div>
+        </div>
+
+        <div className="mx-auto mb-sm flex w-full max-w-3xl flex-wrap gap-1.5 lg:hidden">
+          {technologyNames.map((name) => (
+            <span
+              key={name}
+              className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground"
+            >
+              {name}
+            </span>
+          ))}
+          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
+            Question {questionsAsked}
+          </span>
         </div>
 
         <QuestionPanel

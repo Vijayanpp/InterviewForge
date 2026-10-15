@@ -29,13 +29,14 @@ export function CodeEditor({
       value={value}
       onChange={(v) => onChange(v ?? "")}
       options={{
-        fontSize: 14,
+        fontSize: 13,
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
         automaticLayout: true,
         tabSize: 2,
         wordWrap: "on",
         padding: { top: 12 },
+        scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 },
       }}
     />
   );
@@ -54,7 +55,7 @@ export function LanguageSelect({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as CodingLanguage)}
-      className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-primary"
+      className="max-w-[9.5rem] truncate rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-primary sm:max-w-none"
     >
       {languages.map((lang) => (
         <option key={lang} value={lang} className="bg-[#1e1e1e] text-white">

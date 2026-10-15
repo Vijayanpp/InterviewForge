@@ -73,7 +73,7 @@ export function WizardShell({
         {children}
       </div>
 
-      <div className="mt-xl flex items-center justify-between border-t border-border pt-lg">
+      <div className="mt-xl flex flex-wrap items-center justify-between gap-md border-t border-border pt-lg">
         <Button
           type="button"
           variant="outline"
@@ -83,7 +83,13 @@ export function WizardShell({
           <ArrowLeft className="h-4 w-4" />
           Back
         </Button>
-        <Button type="button" size="lg" onClick={onContinue} disabled={!canContinue || isSubmitting}>
+        <Button
+          type="button"
+          size="lg"
+          onClick={onContinue}
+          disabled={!canContinue || isSubmitting}
+          className="min-w-0 sm:min-w-40"
+        >
           {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {isLastStep ? "Start Interview" : "Continue"}
           {!isSubmitting && <ArrowRight className="h-4 w-4" />}
